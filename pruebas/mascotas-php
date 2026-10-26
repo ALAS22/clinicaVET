@@ -1,0 +1,31 @@
+<?php
+
+class mascota{
+    //propiedades
+    public string $nombre;
+    public string $especie;
+    public int $edad;
+    public int $id;
+
+    //Constructor
+
+    public function __construct(string $nombre, string $especie, int $edad, int $id){
+        $this->nombre = $nombre;
+        $this->especie = $especie;
+        $this->edad = $edad;
+        $this->id = $id;
+
+    }
+    public function presentarMascota(){
+        return "Nombre de la mascota: ".$this->nombre;
+    }
+
+    
+}
+
+// Creando dos objetos con el mismo molde
+// $m1 = new Mascota("Firulais", "perro", 3);
+// $m2 = new Mascota("Michi", "gato", 5);
+
+// echo $m1->presentarMascota() . "<br>";
+// echo $m2->presentarMascota() . "<br>";
