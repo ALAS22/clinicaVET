@@ -1,0 +1,8 @@
+# Script de un solo uso que contiene una clave
+pruebas/crear_admin.php
+
+# Archivos de editores y del sistema
+.vscode/
+.idea/
+*.log
+.DS_Store
