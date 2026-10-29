@@ -51,7 +51,7 @@ class Mascota{
     public function validar(): array{
         $errores = [];
 
-        if(!preg_match('/^[>}\p{L} ]{2,40}$/u', $this->nombre)){
+        if(!preg_match('/^[\p{L} ]{2,40}$/u', $this->nombre)){
             $errores[]="El nombre debe tener entre 2 y 40 letras";
         }
 

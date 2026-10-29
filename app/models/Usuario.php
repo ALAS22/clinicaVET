@@ -68,7 +68,7 @@ class Usuario{
     //se valida antes de ciflar
     public static function validarCLave(string $clave, string $repetida): array{
         $errores = [];
-        if (strlen($clave < 8 || strlen($clave) > 16)) {
+        if (strlen($clave) < 8 || strlen($clave) > 16) {
             $errores[] = 'Las claves deben tener entre 8 y 16 caracteres.';
         }
         if ($clave !== $repetida) {

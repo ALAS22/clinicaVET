@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Si lo que se pide es un archivo o carpeta que existe de verdad, se entrega tal cual
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Todo lo demás se manda a index.php, diciéndole qué página se pidió
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?vista=$1 [L,QSA]
