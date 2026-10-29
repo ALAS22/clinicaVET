@@ -4,33 +4,28 @@ require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/autoload.php';
 
 use app\controllers\SesionControlador;
+use app\controllers\VistaControlador;
 
 SesionControlador::iniciar();
 
-// Páginas que existen. Cualquier otra será un 404.
-$paginasPublicas = ['login', 'registro'];   // se ven sin iniciar sesión
-$paginasPrivadas = ['inicio'];              // exigen haber iniciado sesión
+$vistaControlador = new VistaControlador();
 
 // 1) ¿Qué página pidió el usuario? Si no pidió ninguna, es el login
-$vista = 'login';
+$pedida = 'login';
 if (isset($_GET['vista']) && is_string($_GET['vista']) && $_GET['vista'] !== '') {
-    $vista = $_GET['vista'];
+    $pedida = $_GET['vista'];
 }
 
-// 2) ¿La página existe?
-if (!in_array($vista, $paginasPublicas, true) && !in_array($vista, $paginasPrivadas, true)) {
-    $vista = '404';
+// 2) ¿Existe esa página?
+$vista = $vistaControlador->obtenerVista($pedida);
+if ($vista === '404') {
     http_response_code(404);
 }
 
-// 3) Reglas de acceso
-if (in_array($vista, $paginasPrivadas, true) && !SesionControlador::hayUsuario()) {
-    header('Location: ' . APP_URL . 'login/');
-    exit;
-}
-
-if (in_array($vista, $paginasPublicas, true) && SesionControlador::hayUsuario()) {
-    header('Location: ' . APP_URL . 'inicio/');
+// 3) ¿Puede verla este usuario? Si no, lo mandamos a donde corresponde
+$destino = $vistaControlador->redireccion($vista);
+if ($destino !== '') {
+    header('Location: ' . $destino);
     exit;
 }
 
