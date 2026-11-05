@@ -3,7 +3,7 @@
 namespace app\models;
 
 class Mascota{
-    public const ESPECIES = ['perro','gato','ave','otro'];
+    public const ESPECIES = ['perro','gato','ave', 'conejo', 'otro'];
 
     private string $nombre;
     private string $especie;

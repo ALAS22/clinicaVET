@@ -1,5 +1,5 @@
 <?php
-const APP_URL = 'http://localhost/clinicaVET';
+const APP_URL = 'http://localhost/clinicaVET/';
 const APP_NAME = 'Clinica Veterinaria';
 const APP_SESSION_NAME = 'CLINICA';
 

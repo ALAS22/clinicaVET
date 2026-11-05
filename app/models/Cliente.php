@@ -9,3 +9,4 @@ class Cliente extends Usuario
         parent::__construct($nombre, $edad, $email, self::ROL_CLIENTE, $id);
     }
 }
+
