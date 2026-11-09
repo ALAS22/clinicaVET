@@ -9,13 +9,25 @@ use app\controllers\UsuarioControlador;
 SesionControlador::iniciar();
 
 header('Content-Type: application/json; charset=utf-8');
+// Todos los datos deben ser texto. Si llega un arreglo (por ejemplo nombre[]=x), se rechaza
+foreach ($_POST as $valor) {
+    if (!is_string($valor)) {
+        echo json_encode([
+            'icono'     => 'error',
+            'titulo'    => 'Petición no válida',
+            'texto'     => 'Los datos enviados no tienen el formato correcto.',
+            'redirigir' => '',
+        ]);
+        exit;
+    }
+}
 
 $controlador = new UsuarioControlador();
 
 // Solo se aceptan peticiones POST, y el campo "accion" decide qué hacer
 $accion = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = (string) ($_POST['accion'] ?? '');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && is_string($_POST['accion'])) {
+    $accion = $_POST['accion'];
 }
 
 switch ($accion) {

@@ -3,7 +3,7 @@
 namespace app\models;
 
 class Mascota{
-    public const ESPECIES = ['perro','gato','ave','otro'];
+    public const ESPECIES = ['perro','gato','ave', 'conejo', 'otro'];
 
     private string $nombre;
     private string $especie;
@@ -56,7 +56,7 @@ class Mascota{
         }
 
         if(!in_array($this->especie, self::ESPECIES, true)){
-            $errores[] = 'La especue no es valida. Opciones' .implode(', ',self::ESPECIES);
+            $errores[] = 'La especie no es valida. Opciones' .implode(', ',self::ESPECIES);
         }
         if ($this->edad < 0 || $this->edad > 40) {
             $errores[] = 'La edad debe de estar entre 0 y 40 años.';
@@ -67,7 +67,7 @@ class Mascota{
 
     //----Otros metodos----
 
-    public function presentarMascote(): string{
+    public function presentarMascota(): string{
         return "{$this->nombre} es  un {$this->especie} de {$this->edad} años";
     }
 

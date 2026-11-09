@@ -12,9 +12,16 @@ class VistaControlador
     //   'cliente' = solo clientes
     //   'admin'   = solo el administrador
     private array $paginas = [
-        'login'    => 'publica',
-        'registro' => 'publica',
-        'inicio'   => 'todos',
+         'login'          => 'publica',
+        'registro'       => 'publica',
+        'inicio'         => 'todos',
+        'mascotas'       => 'cliente',
+        'mascota-editar' => 'cliente',
+        'citas'          => 'cliente',
+        'cita-nueva'     => 'cliente',
+        'cita-editar'    => 'cliente',
+        'admin-citas'    => 'admin',
+        'admin-cita'     => 'admin',
     ];
 
     // Devuelve el nombre de la vista a mostrar, o '404' si la página no existe

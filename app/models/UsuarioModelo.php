@@ -6,8 +6,7 @@ use PDOException;
 
 class UsuarioModelo extends ModeloBase
 {
-    /*---------- Guardar (INSERT) ----------*/
-    // Devuelve el id del usuario nuevo, o null si no se pudo guardar
+    //----Guardar (INSERT)----
     public function guardar(Usuario $usuario): ?int
     {
         // Segunda barrera: nunca se guarda un usuario inválido o sin clave
@@ -77,7 +76,7 @@ class UsuarioModelo extends ModeloBase
         $edad = (int) $f['usuario_edad'];
 
         $usuario = $f['usuario_rol'] === Usuario::ROL_ADMIN
-            ? new Administrador($f['usuario_nombre'], $edad, $f['usuario_email'], $id)
+        ? new Administrador($f['usuario_nombre'], $edad, $f['usuario_email'], $id)
             : new Cliente($f['usuario_nombre'], $edad, $f['usuario_email'], $id);
 
         $usuario->setClaveCifrada($f['usuario_clave']);

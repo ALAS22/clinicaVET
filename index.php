@@ -10,26 +10,26 @@ SesionControlador::iniciar();
 
 $vistaControlador = new VistaControlador();
 
-// 1) ¿Qué página pidió el usuario? Si no pidió ninguna, es el login
+// 1) Que pagina pidio el usuario? Si no pidio ninguna, es el login
 $pedida = 'login';
 if (isset($_GET['vista']) && is_string($_GET['vista']) && $_GET['vista'] !== '') {
     $pedida = $_GET['vista'];
 }
 
-// 2) ¿Existe esa página?
+// 2) Existe esa paina?
 $vista = $vistaControlador->obtenerVista($pedida);
 if ($vista === '404') {
     http_response_code(404);
 }
 
-// 3) ¿Puede verla este usuario? Si no, lo mandamos a donde corresponde
+// 3) Puede verla este usuario? Si no, lo mandamos a donde corresponde
 $destino = $vistaControlador->redireccion($vista);
 if ($destino !== '') {
     header('Location: ' . $destino);
     exit;
 }
 
-// 4) Mostrar la página
+// 4) Mostrar la pagina
 ?>
 <!DOCTYPE html>
 <html lang="es">

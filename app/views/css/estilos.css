@@ -1,0 +1,394 @@
+/*ESTILOS*/
+/*Orden:
+    1. Variables
+    2. Base
+    3. Pantallas de acceso
+    4. formulario y botones
+    5. contenido 
+    6. celulares
+*/
+
+/*1. variables: COLORES, FUENTES, Y TAMAÑOS.*/
+:root {
+  --cream: #fef9de;
+  --verde: #283618; /*panel de inicio, barra de admin, botones de inicio*/
+  --naranja: #dda15e; /*barra del cliente*/
+  --azul: #5470ff; /*botones de accion*/
+  --rojo: #ff5c5c; /*botones de accion(CANCELAR)*/
+  --texto: #1a1a1a;
+  --blanco: #ffffff;
+  --gris-claro: #e8e8e8;
+  --gris-borde: #d4d4d4;
+
+  /*Etiquetas de estado.*/
+  --estado-pendiente: #dda15e;
+  --estado-aprobada: #bfdfa0;
+  --estado-atendida: #4ddde0;
+  --estado-cancelada: #f59a9a;
+
+  /*TIPOGRAFIA*/
+
+  --fuente-titulos: "Fredoka", "Trebuchet MS", sans-serif;
+  --fuente-texto: "Open Sans", Arial, sans-serif;
+
+  /*TAMAÑOS*/
+  --radio-pildora: 999px;
+  --radio-caja: 10px;
+}
+
+/* ---------- 1b. Tema de Bulma: sus colores salen de nuestra paleta ----------
+   Bulma define cada color con tres números: matiz (h), saturación (s) y luminosidad (l).
+   Son equivalentes a los colores de arriba, en formato HSL. */
+:root {
+  /* primary = verde oscuro  (#283618) */
+  --bulma-primary-h: 88deg;
+  --bulma-primary-s: 38%;
+  --bulma-primary-l: 15%;
+
+  /* link = azul de los botones de acción  (#5470FF) */
+  --bulma-link-h: 230deg;
+  --bulma-link-s: 100%;
+  --bulma-link-l: 66%;
+
+  /* danger = rojo de cancelar  (#FF5C5C) */
+  --bulma-danger-h: 0deg;
+  --bulma-danger-s: 100%;
+  --bulma-danger-l: 68%;
+
+  /* warning = naranja arena, estado "pendiente"  (#DDA15E) */
+  --bulma-warning-h: 32deg;
+  --bulma-warning-s: 65%;
+  --bulma-warning-l: 62%;
+
+  /* success = verde claro, estado "aprobada"  (#BFDFA0) */
+  --bulma-success-h: 90deg;
+  --bulma-success-s: 50%;
+  --bulma-success-l: 75%;
+
+  /* info = cian, estado "atendida"  (#4DDDE0) */
+  --bulma-info-h: 181deg;
+  --bulma-info-s: 70%;
+  --bulma-info-l: 59%;
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-texto);
+  font-size: 1rem;
+  color: var(--texto);
+  background: var(--crema);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--fuente-titulos);
+}
+
+.title,
+.subtitle {
+  font-family: var(--fuente-titulos);
+}
+
+.title {
+  font-weight: 700;
+}
+
+a {
+  color: var(--verde);
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ---------- 3. Pantallas de acceso (login, registro, 404) ---------- */
+.acceso {
+  display: flex;
+  min-height: 100vh;
+}
+
+.acceso__formulario {
+  flex: 1 1 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.acceso__marca {
+  flex: 1 1 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--verde);
+}
+
+.acceso__marca img {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
+.acceso h1 {
+  margin-bottom: 1.5rem;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+}
+
+.acceso h2 {
+  margin-bottom: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+}
+
+.acceso__enlace {
+  margin-top: 1.5rem;
+}
+
+.acceso__enlace a {
+  font-weight: 700;
+}
+
+/* ---------- 4. Formularios de acceso (campos en píldora) ---------- */
+.formulario {
+  width: 100%;
+  max-width: 330px;
+  text-align: left;
+}
+
+.campo {
+  margin-bottom: 1.2rem;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--texto);
+  background: transparent;
+  border: 2px solid var(--texto);
+  border-radius: var(--radio-pildora);
+}
+
+.campo input::placeholder {
+  color: #777777;
+}
+
+.campo input:focus {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+.boton {
+  display: inline-block;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: var(--crema);
+  background: var(--verde);
+  border: 2px solid var(--verde);
+  border-radius: var(--radio-caja);
+  cursor: pointer;
+}
+
+.boton:hover {
+  filter: brightness(1.3);
+}
+
+.boton:focus-visible {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+.formulario--registro {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 1.5rem;
+  max-width: 880px;
+}
+
+.campo--3 {
+  grid-column: span 3;
+}
+
+.campo--2 {
+  grid-column: span 2;
+}
+
+.formulario__acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.8rem;
+}
+
+.formulario__acciones .boton {
+  max-width: 330px;
+}
+
+/* ---------- 5. Barra de navegación ---------- */
+.barra {
+  color: var(--blanco);
+}
+
+.barra--cliente {
+  background: var(--naranja);
+}
+
+.barra--admin {
+  background: var(--verde);
+}
+
+.barra__titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ---------- 6. Componentes de la aplicación ---------- */
+.contenido {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Respaldo para las pantallas que aún no usan clases de Bulma (administrador, Etapa 3) */
+.contenido > h1:not(.title) {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.contenido > h2:not(.title):not(.subtitle) {
+  margin: 1.2rem 0 0.6rem;
+  font-size: 1.4rem;
+}
+
+/* Cajas blancas con borde fino, como en el diseño */
+.caja {
+  background: var(--blanco);
+  border: 1px solid #555555;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* Tablas: encabezado gris y celdas centradas */
+.tabla thead th {
+  background: var(--gris-claro);
+  text-align: center;
+}
+
+.tabla td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tabla td.texto-izquierda {
+  text-align: left;
+}
+
+/* Pestañas */
+.tabs a {
+  color: #555555;
+}
+
+.tabs li.is-active a {
+  color: var(--texto);
+  border-bottom-color: var(--texto);
+  font-weight: 700;
+}
+
+/* Horarios: cada hora es un botón que se elige */
+.horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.horario {
+  position: relative;
+}
+
+/* El círculo de radio se oculta, pero sigue funcionando con el teclado */
+.horario input {
+  position: absolute;
+  opacity: 0;
+}
+
+.horario span {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--blanco);
+  border: 2px solid var(--verde);
+  border-radius: var(--radio-pildora);
+  cursor: pointer;
+}
+
+.horario input:checked + span {
+  color: var(--crema);
+  background: var(--verde);
+}
+
+.horario input:focus-visible + span {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+.horario input:disabled + span {
+  opacity: 0.45;
+  text-decoration: line-through;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+/* ---------- 7. Celulares y pantallas pequeñas ---------- */
+@media (max-width: 800px) {
+  .acceso {
+    flex-direction: column-reverse; /* el panel con el logo queda arriba */
+  }
+
+  .acceso__marca {
+    flex: 0 0 auto;
+    padding: 1.5rem;
+  }
+
+  .acceso__marca img {
+    max-width: 180px;
+  }
+
+  .formulario--registro {
+    grid-template-columns: 1fr;
+  }
+
+  .campo--3,
+  .campo--2 {
+    grid-column: 1 / -1;
+  }
+
+  .contenido {
+    padding: 1rem;
+  }
+}

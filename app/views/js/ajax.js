@@ -1,67 +1,69 @@
-// Busca todos los formularios que tengan la clase "FormularioAjax"
-const formularios = document.querySelectorAll('.FormularioAjax');
+const formulario = document.querySelectorAll(".FormularioAjax");
 
-formularios.forEach(function (formulario) {
+formulario.forEach(function (formulario) {
+  formulario.addEventListener("submit", function (evento) {
+    evento.preventDefault();
 
-    // Cuando se intenta enviar el formulario...
-    formulario.addEventListener('submit', function (evento) {
+    if (formulario.getAttribute("data-confirmar") === "si") {
+      // Obtener el texto personalizado del formulario
+      let textoConfirmacion = formulario.getAttribute("data-confirmar-texto");
 
-        // ...evitamos el envío normal del navegador (que recargaría la página)
-        evento.preventDefault();
+      // Si no tiene un texto personalizado, usamos el mensaje predeterminado
+      if (textoConfirmacion === null) {
+        textoConfirmacion = "Quieres realizar la acción solicitada";
+      }
 
-        // Si el formulario pide confirmación, preguntamos primero
-        if (formulario.getAttribute('data-confirmar') === 'si') {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Quieres realizar la acción solicitada',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, continuar',
-                cancelButtonText: 'Cancelar'
-            }).then(function (resultado) {
-                if (resultado.isConfirmed) {
-                    enviarFormulario(formulario);
-                }
-            });
-        } else {
-            enviarFormulario(formulario);
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: textoConfirmacion,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, continuar",
+        cancelButtonText: "Cancelar",
+      }).then(function (resultado) {
+        if (resultado.isConfirmed) {
+          enviarFormulario(formulario);
         }
-    });
+      });
+    } else {
+      enviarFormulario(formulario);
+    }
+  });
 });
 
-// Manda los datos del formulario al servidor sin recargar la página
-function enviarFormulario(formulario) {
-    const datos = new FormData(formulario);
+//---- Mandar formulario al servidor sin recargar página
 
-    fetch(formulario.getAttribute('action'), {
-        method: 'POST',
-        body: datos
+function enviarFormulario(formulario) {
+  const datos = new FormData(formulario);
+
+  fetch(formulario.getAttribute("action"), {
+    method: "POST",
+    body: datos,
+  })
+    .then(function (respuesta) {
+      return respuesta.json();
     })
-        .then(function (respuesta) {
-            return respuesta.json();
-        })
-        .then(function (resultado) {
-            mostrarAlerta(resultado);
-        })
-        .catch(function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de conexión',
-                text: 'No se pudo comunicar con el servidor.'
-            });
-        });
+    .then(function (resultado) {
+      return mostrarAlerta(resultado);
+    })
+    .catch(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo comunicar con el servidor",
+      });
+    });
 }
 
-// Muestra la respuesta del servidor y, si trae una dirección, nos lleva ahí
 function mostrarAlerta(resultado) {
-    Swal.fire({
-        icon: resultado.icono,
-        title: resultado.titulo,
-        html: resultado.texto,
-        confirmButtonText: 'Aceptar'
-    }).then(function () {
-        if (resultado.redirigir !== '') {
-            window.location.href = resultado.redirigir;
-        }
-    });
+  Swal.fire({
+    icon: resultado.icon,
+    title: resultado.titulo,
+    html: resultado.texto,
+    confirmButtonText: "Aceptar",
+  }).then(function () {
+    if (resultado.redirigir !== "") {
+      window.location.href = resultado.redirigir;
+    }
+  });
 }

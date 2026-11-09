@@ -1,11 +1,11 @@
 <?php
 
-
 namespace app\controllers;
 
 use app\models\Cliente;
 use app\models\Usuario;
 use app\models\UsuarioModelo;
+use app\controllers\ControladorBase;
 
 class UsuarioControlador extends ControladorBase
 {
