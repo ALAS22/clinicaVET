@@ -4,12 +4,9 @@ namespace app\models;
 
 use PDOException;
 
-class UsuarioModelo extends ModeloBase
-{
+class UsuarioModelo extends ModeloBase{
     //----Guardar (INSERT)----
-    public function guardar(Usuario $usuario): ?int
-    {
-        // Segunda barrera: nunca se guarda un usuario inválido o sin clave
+    public function guardar(Usuario $usuario): ?int{
         if (!empty($usuario->validar()) || $usuario->getClave() === '') {
             return null;
         }
@@ -31,14 +28,12 @@ class UsuarioModelo extends ModeloBase
             return (int) $this->conectar()->lastInsertId();
 
         } catch (PDOException $e) {
-            // Por ejemplo: el correo ya existe (lo rechaza el UNIQUE de la tabla)
             return null;
         }
     }
 
-    /*---------- Consultas ----------*/
-    public function existeEmail(string $email): bool
-    {
+    //---- Consultas ----//
+    public function existeEmail(string $email): bool{
         $sql = $this->conectar()->prepare(
             'SELECT 1 FROM usuario WHERE usuario_email = :email LIMIT 1'
         );
@@ -47,8 +42,7 @@ class UsuarioModelo extends ModeloBase
         return $sql->fetchColumn() !== false;
     }
 
-    public function buscarPorEmail(string $email): ?Usuario
-    {
+    public function buscarPorEmail(string $email): ?Usuario{
         $sql = $this->conectar()->prepare(
             'SELECT * FROM usuario WHERE usuario_email = :email LIMIT 1'
         );
@@ -58,8 +52,7 @@ class UsuarioModelo extends ModeloBase
         return $fila ? $this->crearUsuario($fila) : null;
     }
 
-    public function buscarPorId(int $id): ?Usuario
-    {
+    public function buscarPorId(int $id): ?Usuario{
         $sql = $this->conectar()->prepare(
             'SELECT * FROM usuario WHERE usuario_id = :id LIMIT 1'
         );
@@ -69,9 +62,8 @@ class UsuarioModelo extends ModeloBase
         return $fila ? $this->crearUsuario($fila) : null;
     }
 
-    /*---------- Convierte una fila de la BD en un objeto ----------*/
-    private function crearUsuario(array $f): Usuario
-    {
+    //---- TRansforma una fila de la BD en un objeto ----//
+    private function crearUsuario(array $f): Usuario{
         $id   = (int) $f['usuario_id'];
         $edad = (int) $f['usuario_edad'];
 

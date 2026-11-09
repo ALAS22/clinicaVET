@@ -3,13 +3,14 @@
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../autoload.php';
 
-use app\controllers\CitaControlador;
 use app\controllers\SesionControlador;
 use app\models\Usuario;
+use app\controllers\CitaControlador;
 
 SesionControlador::iniciar();
 
 header('Content-Type: application/json; charset=utf-8');
+
 // Todos los datos deben ser texto. Si llega un arreglo (por ejemplo nombre[]=x), se rechaza
 foreach ($_POST as $valor) {
     if (!is_string($valor)) {
@@ -22,6 +23,7 @@ foreach ($_POST as $valor) {
         exit;
     }
 }
+
 if(!SesionControlador::hayUsuario() || SesionControlador::getRol() !== Usuario::ROL_CLIENTE){
     echo json_encode([
         'icono'     => 'error',

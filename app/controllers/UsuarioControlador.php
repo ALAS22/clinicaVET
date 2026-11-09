@@ -10,21 +10,19 @@ class UsuarioControlador extends ControladorBase
 {
     private UsuarioModelo $modelo;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->modelo = new UsuarioModelo();
     }
 
-    /*---------- Registrar un cliente ----------*/
-    public function registrar(array $datos): array
-    {
-        // 1) Leer lo que llegó del formulario
+    //---- Registrar un cliente ----//
+    public function registrar(array $datos): array{
+        // 1) Leer lo que llego del formulario
         $nombre   = (string) ($datos['nombre'] ?? '');
         $email    = (string) ($datos['email'] ?? '');
         $clave    = (string) ($datos['clave'] ?? '');
         $repetida = (string) ($datos['clave_repetida'] ?? '');
 
-        // Si la edad no es un número, se pone -1 para que validar() la rechace
+        // Si la edad no es un numero, se pone -1 para que validar() la rechace
         $edad = -1;
         if (isset($datos['edad']) && is_numeric($datos['edad'])) {
             $edad = (int) $datos['edad'];
@@ -53,7 +51,7 @@ class UsuarioControlador extends ControladorBase
         return $this->respuesta('success', 'Cuenta creada', 'Ya puedes iniciar sesión.', APP_URL . 'login/');
     }
 
-    /*---------- Iniciar sesión ----------*/
+    //---- Iniciar sesion ----//
     public function iniciarSesion(array $datos): array
     {
         $email = (string) ($datos['email'] ?? '');
@@ -76,7 +74,7 @@ class UsuarioControlador extends ControladorBase
         );
     }
 
-    /*---------- Cerrar sesión ----------*/
+    //---- Cerrar sesion ----//
     public function cerrarSesion(): array
     {
         SesionControlador::cerrar();

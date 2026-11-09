@@ -12,17 +12,15 @@ class AdminCitaControlador extends ControladorBase
 
     private CitaModelo $modelo;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->modelo = new CitaModelo();
     }
 
-    /*---------- Lo que usan las vistas ----------*/
+    //----- Lo que usan las vistas ----//
 
     // Lee y limpia los filtros que vienen en la dirección (?estado=...&fecha=...&q=...&pagina=...)
     // Cualquier valor raro se ignora y queda el valor por defecto
-    public function leerFiltros(array $datos): array
-    {
+    public function leerFiltros(array $datos): array{
         $estado = '';
         if (isset($datos['estado']) && is_string($datos['estado'])
             && in_array($datos['estado'], Cita::ESTADOS, true)) {
@@ -50,9 +48,8 @@ class AdminCitaControlador extends ControladorBase
         return ['estado' => $estado, 'fecha' => $fecha, 'q' => $busqueda, 'pagina' => $pagina];
     }
 
-    // Devuelve la página de citas y los datos para armar el paginador
-    public function listar(array $filtros): array
-    {
+    // Devuelve la pagina de citas y los datos para armar el paginador
+    public function listar(array $filtros): array{
         $total = $this->modelo->contarTodas($filtros['estado'], $filtros['fecha'], $filtros['q']);
 
         $paginas = (int) ceil($total / self::POR_PAGINA);
@@ -79,19 +76,16 @@ class AdminCitaControlador extends ControladorBase
         return ['citas' => $citas, 'total' => $total, 'pagina' => $pagina, 'paginas' => $paginas];
     }
 
-    public function obtener(int $id): ?array
-    {
+    public function obtener(int $id): ?array{
         return $this->modelo->detalle($id);
     }
 
-    public function resumen(): array
-    {
+    public function resumen(): array{
         return $this->modelo->contarPorEstado();
     }
 
-    /*---------- Aprobar ----------*/
-    public function aprobar(array $datos): array
-    {
+    //---- Aprobar ----//
+    public function aprobar(array $datos): array{
         $id = (int) ($datos['id'] ?? 0);
 
         if ($this->modelo->detalle($id) === null) {
@@ -114,9 +108,8 @@ class AdminCitaControlador extends ControladorBase
         );
     }
 
-    /*---------- Marcar como atendida ----------*/
-    public function atender(array $datos): array
-    {
+    //---- Marcar como atendida ----//
+    public function atender(array $datos): array{
         $id = (int) ($datos['id'] ?? 0);
 
         if ($this->modelo->detalle($id) === null) {
@@ -134,9 +127,8 @@ class AdminCitaControlador extends ControladorBase
         return $this->respuesta('success', 'Cita atendida', 'La cita quedó marcada como atendida.', $this->urlDetalle($id));
     }
 
-    /*---------- Cancelar (con motivo opcional) ----------*/
-    public function cancelar(array $datos): array
-    {
+    //---- Cancelar (con motivo opcional) ----//
+    public function cancelar(array $datos): array{
         $id         = (int) ($datos['id'] ?? 0);
         $comentario = $this->leerTexto($datos, 'comentario');
 
@@ -156,8 +148,8 @@ class AdminCitaControlador extends ControladorBase
             );
         }
 
-        // Si escribió un motivo, se guarda para que el cliente lo vea.
-        // Si lo dejó vacío, se conserva el comentario que ya hubiera.
+        // Si escribiO un motivo, se guarda para que el cliente lo vea.
+        // Si lo dejo vacio, se conserva el comentario que estaba.
         if ($comentario !== '') {
             $this->modelo->guardarComentario($id, $comentario);
         }
@@ -165,7 +157,7 @@ class AdminCitaControlador extends ControladorBase
         return $this->respuesta('success', 'Cita cancelada', 'El horario quedó libre.', $this->urlDetalle($id));
     }
 
-    /*---------- Comentar ----------*/
+    //---- Comentar ----//
     public function comentar(array $datos): array
     {
         $id         = (int) ($datos['id'] ?? 0);
@@ -191,15 +183,13 @@ class AdminCitaControlador extends ControladorBase
         );
     }
 
-    /*---------- Auxiliares ----------*/
-    private function urlDetalle(int $id): string
-    {
+    //----- Auxiliares ----//
+    private function urlDetalle(int $id): string{
         return APP_URL . 'admin-cita/?id=' . $id;
     }
 
-    // Lee un campo de texto del formulario (si no llegó o no es texto, devuelve '')
-    private function leerTexto(array $datos, string $campo): string
-    {
+    // Lee un campo de texto del formulario (si no llego o no es texto, regresa '')
+    private function leerTexto(array $datos, string $campo): string{
         if (isset($datos[$campo]) && is_string($datos[$campo])) {
             return trim($datos[$campo]);
         }

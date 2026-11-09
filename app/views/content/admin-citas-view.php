@@ -1,5 +1,5 @@
 <?php
-//app/views/content/admin-citas-view.php
+
 use app\controllers\AdminCitaControlador;
 use app\models\Cita;
 

@@ -6,23 +6,21 @@ use app\models\Usuario;
 
 class VistaControlador
 {
-    // Cada página y quién puede verla:
-    //   'publica' = solo sin sesión (login, registro)
-    //   'todos'   = cualquiera con sesión iniciada
-    //   'cliente' = solo clientes
-    //   'admin'   = solo el administrador
+    // Cada pagina y quien puede verla:
     private array $paginas = [
-        'login'    => 'publica',
-        'registro' => 'publica',
-        'inicio'   => 'todos',
+        'login'          => 'publica',
+        'registro'       => 'publica',
+        'inicio'         => 'todos',
         'mascotas'       => 'cliente',
         'mascota-editar' => 'cliente',
         'citas'          => 'cliente',
         'cita-nueva'     => 'cliente',
         'cita-editar'    => 'cliente',
+        'admin-citas'    => 'admin',
+        'admin-cita'     => 'admin',    
     ];
 
-    // Devuelve el nombre de la vista a mostrar, o '404' si la página no existe
+    // regresa el nombre de la vista a mostrar o 404
     public function obtenerVista(string $pedida): string
     {
         if (isset($this->paginas[$pedida])) {
@@ -32,8 +30,7 @@ class VistaControlador
         return '404';
     }
 
-    // Devuelve la dirección a la que hay que mandar al usuario,
-    // o '' si puede ver la página sin problema
+    // regresa la direccion a la que hay que mandar al usuario o '' 
     public function redireccion(string $vista): string
     {
         if ($vista === '404') {
@@ -49,12 +46,12 @@ class VistaControlador
             return APP_URL . 'inicio/';
         }
 
-        // Todas las demás exigen sesión
+        // Todas las demas piden sesion
         if ($acceso !== 'publica' && !$hayUsuario) {
             return APP_URL . 'login/';
         }
 
-        // Páginas exclusivas de un rol
+        // Paginas exclusivas de un rol
         if ($acceso === 'admin' && $rol !== Usuario::ROL_ADMIN) {
             return APP_URL . 'inicio/';
         }

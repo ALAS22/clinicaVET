@@ -9,25 +9,21 @@ class MascotaControlador extends ControladorBase
 {
     private MascotaModelo $modelo;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->modelo = new MascotaModelo();
     }
 
-    /*---------- Lo que usan las vistas ----------*/
-    public function listar(): array
-    {
+    //---- Lo que usan las vistas ----//
+    public function listar(): array{
         return $this->modelo->listarPorUsuario($this->usuarioId());
     }
 
-    public function obtener(int $id): ?Mascota
-    {
+    public function obtener(int $id): ?Mascota{
         return $this->modelo->buscarPorId($id, $this->usuarioId());
     }
 
-    /*---------- Registrar ----------*/
-    public function registrar(array $datos): array
-    {
+    //---- Registrar ----//
+    public function registrar(array $datos): array{
         $mascota = new Mascota(
             $this->usuarioId(),
             (string) ($datos['nombre'] ?? ''),
@@ -52,9 +48,8 @@ class MascotaControlador extends ControladorBase
         );
     }
 
-    /*---------- Actualizar ----------*/
-    public function actualizar(array $datos): array
-    {
+    //---- Actualizar ----//
+    public function actualizar(array $datos): array{
         $mascota = $this->obtener((int) ($datos['id'] ?? 0));
 
         // Si no existe o es de otro cliente, la respuesta es la misma
@@ -78,9 +73,8 @@ class MascotaControlador extends ControladorBase
         return $this->respuesta('success', 'Mascota actualizada', 'Los cambios se guardaron.', $this->urlLista());
     }
 
-    /*---------- Eliminar ----------*/
-    public function eliminar(array $datos): array
-    {
+    //---- Eliminar ----//
+    public function eliminar(array $datos): array{
         if (!$this->modelo->eliminar((int) ($datos['id'] ?? 0), $this->usuarioId())) {
             return $this->respuesta('error', 'No se pudo eliminar', 'No se encontró la mascota.');
         }
@@ -88,15 +82,13 @@ class MascotaControlador extends ControladorBase
         return $this->respuesta('success', 'Mascota eliminada', 'Ya no aparece en tu lista.', $this->urlLista());
     }
 
-    /*---------- Auxiliares ----------*/
-    private function usuarioId(): int
-    {
+    //---- Auxiliares ----//
+    private function usuarioId(): int{
         return SesionControlador::getId() ?? 0;
     }
 
-    // Si la edad no es un número devuelve -1, para que validar() la rechace
-    private function leerEdad(array $datos): int
-    {
+    // Si la edad no es un numero regresa -1, para que validar() la rechace
+    private function leerEdad(array $datos): int{
         if (isset($datos['edad']) && is_numeric($datos['edad'])) {
             return (int) $datos['edad'];
         }
@@ -104,8 +96,7 @@ class MascotaControlador extends ControladorBase
         return -1;
     }
 
-    private function urlLista(): string
-    {
+    private function urlLista(): string{
         return APP_URL . 'mascotas/';
     }
 }

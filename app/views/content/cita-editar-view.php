@@ -52,85 +52,107 @@ if ($modificable) {
 }
 ?>
 
-<h1>Modificar cita</h1>
-<p><a href="<?php echo APP_URL; ?>citas/">&larr; Volver a mis citas</a></p>
+<h1 class="title">Modificar cita</h1>
+<p class="mb-4"><a class="button is-small is-light" href="<?php echo APP_URL; ?>citas/">&larr; Volver a mis citas</a></p>
 
 <?php if (!$modificable) { ?>
 
-    <p>No se encontró la cita, o ya no se puede modificar.</p>
+    <div class="notification is-warning is-light">No se encontró la cita, o ya no se puede modificar.</div>
 
 <?php } else { ?>
 
-    <p>Mascota: <strong><?php echo htmlspecialchars($nombreMascota); ?></strong></p>
-    <p>
-        Cita actual: <?php echo date('d/m/Y H:i', strtotime($cita->getFechaHora())); ?>
-        (<?php echo $cita->getEstado(); ?>)
-    </p>
+    <section class="box caja">
+        <p>Mascota: <strong><?php echo htmlspecialchars($nombreMascota); ?></strong></p>
+        <p>
+            Cita actual: <strong><?php echo date('d/m/Y H:i', strtotime($cita->getFechaHora())); ?></strong>
+            (<?php echo $cita->getEstado(); ?>)
+        </p>
 
-    <?php if ($cita->getComentario() !== null && $cita->getComentario() !== '') { ?>
-        <p>Comentario de la clínica: <?php echo htmlspecialchars($cita->getComentario()); ?></p>
-    <?php } ?>
+        <?php if ($cita->getComentario() !== null && $cita->getComentario() !== '') { ?>
+            <p class="mt-3"><strong>Comentario de la clínica:</strong> <?php echo htmlspecialchars($cita->getComentario()); ?></p>
+        <?php } ?>
+    </section>
 
-    <p>Si modificas la cita, volverá a quedar <strong>pendiente de aprobación</strong>.</p>
+    <div class="notification is-warning is-light">
+        Si modificas la cita, volverá a quedar <strong>pendiente de aprobación</strong>.
+    </div>
 
-    <h2>1. Elige el día</h2>
+    <section class="box caja">
+        <h2 class="title is-5">1. Elige el día</h2>
 
-    <form action="<?php echo APP_URL; ?>cita-editar/" method="GET">
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
-        <input type="date" name="fecha"
-               min="<?php echo $hoy; ?>" max="<?php echo $maximo; ?>"
-               value="<?php echo htmlspecialchars($fecha); ?>" required>
-        <button type="submit">Ver horarios</button>
-    </form>
+        <form action="<?php echo APP_URL; ?>cita-editar/" method="GET">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
+
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <input class="input" type="date" name="fecha"
+                           min="<?php echo $hoy; ?>" max="<?php echo $maximo; ?>"
+                           value="<?php echo htmlspecialchars($fecha); ?>" required>
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-primary">Ver horarios</button>
+                </div>
+            </div>
+        </form>
+    </section>
 
     <?php if ($errorDia !== '') { ?>
 
-        <p><strong><?php echo htmlspecialchars($errorDia); ?></strong> Elige otro día.</p>
+        <div class="notification is-warning is-light">
+            <strong><?php echo htmlspecialchars($errorDia); ?></strong> Elige otro día.
+        </div>
 
     <?php } elseif (!$hayLibres) { ?>
 
-        <p><strong>No hay horarios disponibles ese día.</strong> Elige otro día.</p>
+        <div class="notification is-warning is-light">
+            <strong>No hay horarios disponibles ese día.</strong> Elige otro día.
+        </div>
 
     <?php } else { ?>
 
-        <h2>2. Elige la hora y corrige los síntomas si hace falta</h2>
+        <section class="box caja">
+            <h2 class="title is-5">2. Elige la hora y corrige los síntomas si hace falta</h2>
 
-        <form class="FormularioAjax" data-confirmar="si"
-              data-confirmar-texto="¿Deseas guardar los cambios? La cita volverá a quedar pendiente de aprobación."
-              action="<?php echo APP_URL; ?>app/ajax/citaAjax.php" method="POST" autocomplete="off">
-            <input type="hidden" name="accion" value="modificar">
-            <input type="hidden" name="id" value="<?php echo $id; ?>">
-            <input type="hidden" name="fecha" value="<?php echo htmlspecialchars($fecha); ?>">
+            <form class="FormularioAjax" data-confirmar="si"
+                  data-confirmar-texto="¿Deseas guardar los cambios? La cita volverá a quedar pendiente de aprobación."
+                  action="<?php echo APP_URL; ?>app/ajax/citaAjax.php" method="POST" autocomplete="off">
+                <input type="hidden" name="accion" value="modificar">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
+                <input type="hidden" name="fecha" value="<?php echo htmlspecialchars($fecha); ?>">
 
-            <div>
-                <label>Hora</label>
-                <select name="hora" required>
-                    <option value="">Selecciona una hora</option>
-                    <?php foreach ($horarios as $horario) {
-                        $atributo = '';
-                        $texto    = $horario['hora'];
+                <div class="field">
+                    <label class="label">Hora</label>
+                    <div class="horarios">
+                        <?php foreach ($horarios as $horario) {
+                            $atributo = '';
+                            $ayuda    = '';
 
-                        if (!$horario['libre']) {
-                            $atributo = 'disabled';
-                            $texto    = $texto . ' (no disponible)';
-                        } elseif ($fecha === $fechaActual && $horario['hora'] === $horaActual) {
-                            $atributo = 'selected';   // la hora que ya tenía la cita
-                        }
-                    ?>
-                        <option value="<?php echo $horario['hora']; ?>" <?php echo $atributo; ?>>
-                            <?php echo $texto; ?>
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
+                            if (!$horario['libre']) {
+                                $atributo = 'disabled';
+                                $ayuda    = ' title="No disponible"';
+                            } elseif ($fecha === $fechaActual && $horario['hora'] === $horaActual) {
+                                $atributo = 'checked';   // la hora que ya tenía la cita
+                            }
+                        ?>
+                            <label class="horario"<?php echo $ayuda; ?>>
+                                <input type="radio" name="hora" value="<?php echo $horario['hora']; ?>" <?php echo $atributo; ?> required>
+                                <span><?php echo $horario['hora']; ?></span>
+                            </label>
+                        <?php } ?>
+                    </div>
+                    <p class="help">Las horas tachadas ya están ocupadas.</p>
+                </div>
 
-            <div>
-                <label>Síntomas o motivo de la cita</label>
-                <textarea name="motivo" rows="4" minlength="10" maxlength="500" required><?php echo htmlspecialchars($cita->getMotivo()); ?></textarea>
-            </div>
+                <div class="field">
+                    <label class="label" for="motivo">Síntomas o motivo de la cita</label>
+                    <div class="control">
+                        <textarea class="textarea" id="motivo" name="motivo" rows="4" minlength="10" maxlength="500" required><?php echo htmlspecialchars($cita->getMotivo()); ?></textarea>
+                    </div>
+                </div>
 
-            <button type="submit">Guardar cambios</button>
-        </form>
+                <button type="submit" class="button is-primary is-fullwidth">Guardar cambios</button>
+            </form>
+        </section>
 
     <?php } ?>
 

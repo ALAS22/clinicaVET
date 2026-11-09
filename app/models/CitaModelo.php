@@ -7,11 +7,8 @@ use PDOException;
 
 class CitaModelo extends ModeloBase
 {
-    /*---------- Horas ocupadas de un día ----------*/
-    // Devuelve algo como ['09:00', '11:00']. Las citas canceladas no aparecen,
-    // porque su cita_slot es NULL (y NULL nunca está dentro de un BETWEEN)
-    public function horasOcupadas(string $fecha, int $excluirCitaId = 0): array
-    {
+    //---- Horas ocupadas de un dia ----//
+    public function horasOcupadas(string $fecha, int $excluirCitaId = 0): array{
         $sql = $this->conectar()->prepare(
             "SELECT DATE_FORMAT(cita_slot, '%H:%i') AS hora
              FROM cita
@@ -27,9 +24,7 @@ class CitaModelo extends ModeloBase
         return $sql->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    // ¿Ya hay una cita activa en ese horario exacto? ($excluirCitaId sirve al modificar)
-    public function estaOcupada(string $fechaHora, int $excluirCitaId = 0): bool
-    {
+    public function estaOcupada(string $fechaHora, int $excluirCitaId = 0): bool{
         $sql = $this->conectar()->prepare(
             'SELECT 1 FROM cita WHERE cita_slot = :fecha AND cita_id <> :excluir LIMIT 1'
         );
@@ -38,10 +33,8 @@ class CitaModelo extends ModeloBase
         return $sql->fetchColumn() !== false;
     }
 
-    /*---------- Guardar (INSERT) ----------*/
-    // Devuelve el id nuevo, o null si no se pudo guardar
-    public function guardar(Cita $cita): ?int
-    {
+    //---- Guardar (INSERT) ----//
+    public function guardar(Cita $cita): ?int{
         if (!empty($cita->validar())) {
             return null;
         }
@@ -63,15 +56,13 @@ class CitaModelo extends ModeloBase
             return (int) $this->conectar()->lastInsertId();
 
         } catch (PDOException $e) {
-            // Si dos personas piden el mismo horario a la vez, el UNIQUE de cita_slot rechaza a la segunda
+            //cuando dos personas piden la misma fecha
             return null;
         }
     }
 
-    /*---------- Consultas ----------*/
-    // Lista para mostrar: cada fila trae también el nombre de la mascota
-    public function listarPorUsuario(int $usuarioId): array
-    {
+    //---- Consultas ----//
+    public function listarPorUsuario(int $usuarioId): array{
         $sql = $this->conectar()->prepare(
             'SELECT c.cita_id, c.cita_fecha_hora, c.cita_motivo, c.cita_estado, c.cita_comentario,
                     m.mascota_nombre
@@ -85,9 +76,8 @@ class CitaModelo extends ModeloBase
         return $sql->fetchAll();
     }
 
-    // Una cita como objeto (solo si es de ese cliente)
-    public function buscarPorId(int $id, int $usuarioId): ?Cita
-    {
+    // Una cita como objeto
+    public function buscarPorId(int $id, int $usuarioId): ?Cita{
         $sql = $this->conectar()->prepare(
             'SELECT * FROM cita WHERE cita_id = :id AND usuario_id = :usuario LIMIT 1'
         );
@@ -97,9 +87,8 @@ class CitaModelo extends ModeloBase
         return $fila ? $this->crearCita($fila) : null;
     }
 
-    /*---------- Actualizar (UPDATE) ----------*/
-    public function actualizar(Cita $cita): bool
-    {
+    //---- actualizar (UPDATE) ----//
+    public function actualizar(Cita $cita): bool{
         if (!empty($cita->validar()) || $cita->getId() === null) {
             return false;
         }
@@ -126,11 +115,9 @@ class CitaModelo extends ModeloBase
         }
     }
 
-    /*---------- Cancelar ----------*/
-    // Solo cancela citas activas del cliente. Al quedar "cancelada", cita_slot pasa a NULL
-    // y el horario se libera solo.
-    public function cancelar(int $id, int $usuarioId): bool
-    {
+    //---- Cancelar ----//
+    // Solo cancela citas activas del cliente.
+    public function cancelar(int $id, int $usuarioId): bool{
         try {
             $sql = $this->conectar()->prepare(
                 "UPDATE cita SET cita_estado = 'cancelada'
@@ -146,12 +133,10 @@ class CitaModelo extends ModeloBase
         }
     }
 
-        /*==================== PARA EL ADMINISTRADOR ====================*/
-
-    // Arma el WHERE según los filtros. Los valores del usuario NUNCA se pegan en el SQL:
-    // van como marcadores. Lo único que se concatena son textos fijos escritos por nosotras.
-    private function condiciones(string $estado, string $fecha, string $busqueda): array
-    {
+        
+    
+    /*---- PARA EL ADMINISTRADOR ----*/
+    private function condiciones(string $estado, string $fecha, string $busqueda): array{
         $condiciones = [];
         $parametros  = [];
 
@@ -166,7 +151,6 @@ class CitaModelo extends ModeloBase
         }
 
         if ($busqueda !== '') {
-            // Con consultas preparadas de verdad, cada marcador se usa UNA sola vez: por eso son tres
             $condiciones[] = '(u.usuario_nombre LIKE :buscar1
                                OR u.usuario_email LIKE :buscar2
                                OR m.mascota_nombre LIKE :buscar3)';
@@ -183,9 +167,7 @@ class CitaModelo extends ModeloBase
         return ['where' => $where, 'parametros' => $parametros];
     }
 
-    // Una página de citas (de todos los clientes), la más próxima primero
-    public function listarTodas(string $estado, string $fecha, string $busqueda, int $limite, int $desplazamiento): array
-    {
+    public function listarTodas(string $estado, string $fecha, string $busqueda, int $limite, int $desplazamiento): array{
         $filtro = $this->condiciones($estado, $fecha, $busqueda);
 
         $sql = $this->conectar()->prepare(
@@ -209,9 +191,7 @@ class CitaModelo extends ModeloBase
         return $sql->fetchAll();
     }
 
-    // Cuántas citas cumplen los filtros (sirve para calcular las páginas)
-    public function contarTodas(string $estado, string $fecha, string $busqueda): int
-    {
+    public function contarTodas(string $estado, string $fecha, string $busqueda): int{
         $filtro = $this->condiciones($estado, $fecha, $busqueda);
 
         $sql = $this->conectar()->prepare(
@@ -230,8 +210,7 @@ class CitaModelo extends ModeloBase
     }
 
     // Todos los datos de una cita, con los del cliente y la mascota. null si no existe
-    public function detalle(int $id): ?array
-    {
+    public function detalle(int $id): ?array{
         $sql = $this->conectar()->prepare(
             'SELECT c.cita_id, c.cita_fecha_hora, c.cita_motivo, c.cita_estado, c.cita_comentario,
                     m.mascota_nombre, m.mascota_especie, m.mascota_edad,
@@ -252,9 +231,7 @@ class CitaModelo extends ModeloBase
         return $fila;
     }
 
-    // Cuántas citas hay en cada estado: ['pendiente' => 3, 'aprobada' => 1, ...]
-    public function contarPorEstado(): array
-    {
+    public function contarPorEstado(): array{
         $conteo = [
             Cita::PENDIENTE => 0,
             Cita::APROBADA  => 0,
@@ -273,11 +250,10 @@ class CitaModelo extends ModeloBase
         return $conteo;
     }
 
-    /*---------- Cambios de estado ----------*/
-    // En cada UPDATE, el WHERE exige el estado de origen: si la cita ya cambió, no se toca
+    //---- Cambios de estado ----//
+    // En cada UPDATE, el WHERE pide el estado. si la cita ya cambió, no se toca
 
-    public function aprobar(int $id, string $ahora): bool
-    {
+    public function aprobar(int $id, string $ahora): bool{
         try {
             $sql = $this->conectar()->prepare(
                 "UPDATE cita SET cita_estado = 'aprobada'
@@ -292,8 +268,7 @@ class CitaModelo extends ModeloBase
         }
     }
 
-    public function atender(int $id, string $ahora): bool
-    {
+    public function atender(int $id, string $ahora): bool{
         try {
             $sql = $this->conectar()->prepare(
                 "UPDATE cita SET cita_estado = 'atendida'
@@ -308,9 +283,8 @@ class CitaModelo extends ModeloBase
         }
     }
 
-    // Igual que cancelar(), pero sin exigir que la cita sea de un cliente en particular
-    public function cancelarComoAdmin(int $id): bool
-    {
+    // Igual que cancelar(), pero sin pedir cita de un cliente en particular
+    public function cancelarComoAdmin(int $id): bool{
         try {
             $sql = $this->conectar()->prepare(
                 "UPDATE cita SET cita_estado = 'cancelada'
@@ -325,9 +299,7 @@ class CitaModelo extends ModeloBase
         }
     }
 
-    public function guardarComentario(int $id, string $comentario): bool
-    {
-        // Un comentario vacío se guarda como NULL (sin comentario)
+    public function guardarComentario(int $id, string $comentario): bool{
         $valor = null;
         if ($comentario !== '') {
             $valor = $comentario;
@@ -345,9 +317,8 @@ class CitaModelo extends ModeloBase
             return false;
         }
     }
-    /*---------- Convierte una fila de la BD en un objeto Cita ----------*/
-    private function crearCita(array $f): Cita
-    {
+    //---- Convierte una fila de la BD en un objeto Cita ----//
+    private function crearCita(array $f): Cita{
         return new Cita(
             (int) $f['usuario_id'],
             (int) $f['mascota_id'],

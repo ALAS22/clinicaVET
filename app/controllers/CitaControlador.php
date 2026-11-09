@@ -6,31 +6,26 @@ use app\models\Cita;
 use app\models\CitaModelo;
 use app\models\MascotaModelo;
 
-class CitaControlador extends ControladorBase
-{
+class CitaControlador extends ControladorBase{
     private CitaModelo $modelo;
     private MascotaModelo $mascotas;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->modelo   = new CitaModelo();
         $this->mascotas = new MascotaModelo();
     }
 
-    /*---------- Lo que usan las vistas ----------*/
-    public function listar(): array
-    {
+    //---- Lo que usan las vistas -----//
+    public function listar(): array{
         return $this->modelo->listarPorUsuario($this->usuarioId());
     }
 
-    public function obtener(int $id): ?Cita
-    {
+    public function obtener(int $id): ?Cita{
         return $this->modelo->buscarPorId($id, $this->usuarioId());
     }
 
-    // Si el día no sirve devuelve el motivo; si sirve, devuelve ''
-    public function errorDia(string $fecha): string
-    {
+    // Si el dia no sirve regresa el motivo; si sirve, regresa ''
+    public function errorDia(string $fecha): string{
         $errores = Cita::validarDia($fecha);
 
         if (empty($errores)) {
@@ -40,10 +35,9 @@ class CitaControlador extends ControladorBase
         return $errores[0];
     }
 
-    // Horarios de un día: [['hora' => '09:00', 'libre' => true], ...]
-    // Devuelve [] si el día no es válido. Al modificar, se excluye la propia cita
-    public function horarios(string $fecha, int $excluirCitaId = 0): array
-    {
+    // Horarios de un dia: [['hora' => '09:00', 'libre' => true], ...]
+    // Devuelve [] si el día no es válido. Al cambiarlo, se excluye la propia cita
+    public function horarios(string $fecha, int $excluirCitaId = 0): array{
         if ($this->errorDia($fecha) !== '') {
             return [];
         }
@@ -63,9 +57,8 @@ class CitaControlador extends ControladorBase
         return $horarios;
     }
 
-    /*---------- Agendar ----------*/
-    public function agendar(array $datos): array
-    {
+    //---- Agendar ----//
+    public function agendar(array $datos): array{
         $mascotaId = (int) ($datos['mascota_id'] ?? 0);
         $fecha     = (string) ($datos['fecha'] ?? '');
         $hora      = (string) ($datos['hora'] ?? '');
@@ -106,7 +99,7 @@ class CitaControlador extends ControladorBase
         );
     }
 
-    /*---------- Modificar ----------*/
+    //----- Modificar ----//
     public function modificar(array $datos): array
     {
         $cita = $this->obtener((int) ($datos['id'] ?? 0));
@@ -156,9 +149,8 @@ class CitaControlador extends ControladorBase
         );
     }
 
-    /*---------- Cancelar ----------*/
-    public function cancelar(array $datos): array
-    {
+    //---- Cancelar ----//
+    public function cancelar(array $datos): array{
         $id   = (int) ($datos['id'] ?? 0);
         $cita = $this->obtener($id);
 
@@ -177,9 +169,8 @@ class CitaControlador extends ControladorBase
         return $this->respuesta('success', 'Cita cancelada', 'El horario quedó libre.', APP_URL . 'citas/');
     }
 
-    /*---------- Auxiliares ----------*/
-    private function usuarioId(): int
-    {
+    //---- Auxiliares ----//
+    private function usuarioId(): int{
         return SesionControlador::getId() ?? 0;
     }
 }

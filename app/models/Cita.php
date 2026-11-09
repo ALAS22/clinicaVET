@@ -4,8 +4,7 @@ namespace app\models;
 
 use DateTime;
 
-class Cita
-{
+class Cita{
     public const PENDIENTE = 'pendiente';
     public const APROBADA  = 'aprobada';
     public const CANCELADA = 'cancelada';
@@ -13,12 +12,12 @@ class Cita
 
     public const ESTADOS = [self::PENDIENTE, self::APROBADA, self::CANCELADA, self::ATENDIDA];
 
-    // Horario de la clínica: lunes a sábado, en bloques de 1 hora
-    public const HORA_INICIO   = 9;    // primera cita: 9:00
-    public const HORA_FIN      = 17;   // la clínica cierra a las 17:00 (última cita: 16:00)
-    public const DIAS_ADELANTE = 60;   // con cuántos días de anticipación se puede agendar
+    // Horario de la Clinica
+    public const HORA_INICIO   = 9;    // primera cita a las 9
+    public const HORA_FIN      = 17;   // cierra a las 17:00 (última cita a las 16
+    public const DIAS_ADELANTE = 60;   // dias de anticipacion para agendar
 
-    // Estas necesitan limpieza o tienen setter, así que se asignan con él
+    // limpieza o tienen setter
     private string $fechaHora;   // formato 'AAAA-MM-DD HH:MM:SS'
     private string $motivo;
 
@@ -28,14 +27,14 @@ class Cita
         string $fechaHora,
         string $motivo,
         private string $estado = self::PENDIENTE,
-        private ?string $comentario = null,   // comentario del administrador
+        private ?string $comentario = null,   // comentario del admin
         private ?int $id = null
     ) {
         $this->setFechaHora($fechaHora);
         $this->setMotivo($motivo);
     }
 
-    /*---------- Getters ----------*/
+    //---- getters ----//
     public function getId(): ?int { return $this->id; }
     public function getUsuarioId(): int { return $this->usuarioId; }
     public function getMascotaId(): int { return $this->mascotaId; }
@@ -44,13 +43,13 @@ class Cita
     public function getEstado(): string { return $this->estado; }
     public function getComentario(): ?string { return $this->comentario; }
 
-    /*---------- Setters ----------*/
+    //---- setters ----//
     public function setFechaHora(string $fechaHora): void { $this->fechaHora = trim($fechaHora); }
     public function setMotivo(string $motivo): void { $this->motivo = trim($motivo); }
     public function setEstado(string $estado): void { $this->estado = $estado; }
 
-    /*---------- Horarios ----------*/
-    // Las horas de inicio de cada bloque: ['09:00', '10:00', ... , '16:00']
+    //---- horarios ----//
+    // Las horas de inicio de cada bloque
     public static function horasDelDia(): array
     {
         $horas = [];
@@ -62,13 +61,13 @@ class Cita
         return $horas;
     }
 
-    // Valida solo el DÍA (sin la hora): ¿es una fecha real, no pasada, no muy lejana y no domingo?
+    // Valida solo el dia
     public static function validarDia(string $fecha): array
     {
-        // El "!" hace que la hora quede en 00:00:00
+        // el "!" hace que la hora quede en 00:00:00
         $dia = DateTime::createFromFormat('!Y-m-d', $fecha);
 
-        // Si la fecha no existe (por ejemplo 2026-02-31), PHP la "corrige"; aquí lo detectamos
+        // Si la fecha no existe, PHP la corrige, aquí lo detectamos
         if ($dia === false || $dia->format('Y-m-d') !== $fecha) {
             return ['La fecha no es válida.'];
         }
@@ -90,7 +89,7 @@ class Cita
         return [];
     }
 
-    /*---------- Validación completa ----------*/
+    //---- validacion completa ----//
     public function validar(): array
     {
         $errores = [];

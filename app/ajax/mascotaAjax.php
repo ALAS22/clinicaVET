@@ -22,7 +22,7 @@ foreach ($_POST as $valor) {
         exit;
     }
 }
-// Solo los clientes con sesión iniciada pueden usar este archivo
+// Solo los clientes con sesion iniciada pueden usar este archivo
 if (!SesionControlador::hayUsuario() || SesionControlador::getRol() !== Usuario::ROL_CLIENTE) {
     echo json_encode([
         'icono'     => 'error',

@@ -318,7 +318,7 @@ comprobar("La especie 'conejo' está permitida en la tabla mascota", str_contain
 $admins = (int) consultar($pdo, "SELECT COUNT(*) FROM usuario WHERE usuario_rol = 'admin' AND usuario_email NOT LIKE 'prueba.%@test.local'");
 comprobar('Existe al menos un administrador real (creado con crear_admin.php)', $admins > 0);
 
-limpiar($pdo);   // por si una prueba anterior se quedó a medias
+limpiar($pdo);   // por si una prueba anterior se quedo a medias
 
 /* ======================= 2. CLASES DE DATOS ======================= */
 titulo('2. CLASES DE DATOS (reglas, sin base de datos)');
@@ -513,13 +513,9 @@ comprobar('A queda con 1 mascota', count($mascotas->listar()) === 1);
 
 /* ======================= 5. CITAS DEL CLIENTE ======================= */
 titulo('5. CITAS DEL CLIENTE (horarios, reglas y permisos)');
-echo '<p>PRUEBA: EL CÓDIGO SIGUE EJECUTÁNDOSE</p>';
 
 $citas = new CitaControlador();
 $dia   = buscarDiaLibre($citas);
-echo '<pre>';
-var_dump($dia);
-echo '</pre>';
 
 comprobar('Hay un día con al menos 4 horarios libres para probar', $dia['fecha'] !== '', 'Libera horarios o borra citas de prueba y repite');
 if ($dia['fecha'] === '') {
@@ -583,24 +579,6 @@ $r = $citas->modificar(['id' => $idC1, 'fecha' => $f, 'hora' => $h2, 'motivo' =>
 comprobar('A modifica su cita a otra hora', respondio($r, 'success'), describir($r));
 comprobar('La hora anterior quedó libre', horarioLibre($citas, $f, $h1));
 comprobar('La hora nueva quedó ocupada', !horarioLibre($citas, $f, $h2));
-
-echo "<br>DEBUG 1: Antes de aprobar la cita<br>";
-
-try {
-
-    $pdo->prepare("
-        UPDATE cita
-        SET cita_estado = 'aprobada'
-        WHERE cita_id = :id
-    ")->execute([':id' => $idC1]);
-
-    echo "DEBUG 2: Cita aprobada correctamente<br>";
-
-} catch (PDOException $e) {
-
-    echo "<br>ERROR SQL: " . $e->getMessage() . "<br>";
-
-}
 comprobar(
     'Modificar una cita aprobada la regresa a pendiente',
     respondio($r, 'success') &&
@@ -612,7 +590,6 @@ comprobar(
     describir($r)
 );
 
-echo "DEBUG 4: Pruebas de modificación terminadas<br>";
 $pdo->prepare("UPDATE cita SET cita_estado = 'aprobada' WHERE cita_id = :id")->execute([':id' => $idC1]);
 $r = $citas->modificar(['id' => $idC1, 'fecha' => $f, 'hora' => $h3, 'motivo' => $motivo]);
 comprobar('Modificar una cita aprobada la regresa a pendiente', respondio($r, 'success') && consultar($pdo, 'SELECT cita_estado FROM cita WHERE cita_id = :id', [':id' => $idC1]) === 'pendiente', describir($r));
