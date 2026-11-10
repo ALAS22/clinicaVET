@@ -1,37 +1,29 @@
-/*ESTILOS*/
-/*Orden:
-    1. Variables
-    2. Base
-    3. Pantallas de acceso
-    4. formulario y botones
-    5. contenido 
-    6. celulares
-*/
+/* ==========================================================
+   Clínica VET · estilos propios (se cargan DESPUÉS de Bulma)
+   Orden: 1) variables y tema de Bulma  2) base  3) acceso
+          4) formularios de acceso  5) barra  6) componentes
+          7) celulares
+   ========================================================== */
 
-/*1. variables: COLORES, FUENTES, Y TAMAÑOS.*/
+/* ---------- 1. Variables ---------- */
 :root {
-  --cream: #fef9de;
-  --verde: #283618; /*panel de inicio, barra de admin, botones de inicio*/
-  --naranja: #dda15e; /*barra del cliente*/
-  --azul: #5470ff; /*botones de accion*/
-  --rojo: #ff5c5c; /*botones de accion(CANCELAR)*/
+  /* Colores (aproximados del diseño: ajústalos con los códigos reales) */
+  --crema: #fef9de;
+  --verde: #283618;
+  --naranja: #dda15e;
+  --vino: #5e1515;
+  --azul: #5470ff;
+  --rojo: #ff5c5c;
   --texto: #1a1a1a;
   --blanco: #ffffff;
   --gris-claro: #e8e8e8;
   --gris-borde: #d4d4d4;
 
-  /*Etiquetas de estado.*/
-  --estado-pendiente: #dda15e;
-  --estado-aprobada: #bfdfa0;
-  --estado-atendida: #4ddde0;
-  --estado-cancelada: #f59a9a;
-
-  /*TIPOGRAFIA*/
-
+  /* Tipografía */
   --fuente-titulos: "Fredoka", "Trebuchet MS", sans-serif;
   --fuente-texto: "Open Sans", Arial, sans-serif;
 
-  /*TAMAÑOS*/
+  /* Medidas */
   --radio-pildora: 999px;
   --radio-caja: 10px;
 }

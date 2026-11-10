@@ -345,6 +345,31 @@ class CitaModelo extends ModeloBase
             return false;
         }
     }
+      public function cambiarEstado(int $id, string $estadoActual, string $estadoNuevo, string $comentario): bool{
+        // Un comentario vacío se guarda como NULL (sin comentario)
+        $valor = null;
+        if ($comentario !== '') {
+            $valor = $comentario;
+        }
+
+        try {
+            $sql = $this->conectar()->prepare(
+                'UPDATE cita SET cita_estado = :nuevo, cita_comentario = :comentario
+                 WHERE cita_id = :id AND cita_estado = :actual'
+            );
+            $sql->execute([
+                ':nuevo'      => $estadoNuevo,
+                ':comentario' => $valor,
+                ':id'         => $id,
+                ':actual'     => $estadoActual,
+            ]);
+
+            return $sql->rowCount() === 1;
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
     /*---------- Convierte una fila de la BD en un objeto Cita ----------*/
     private function crearCita(array $f): Cita
     {

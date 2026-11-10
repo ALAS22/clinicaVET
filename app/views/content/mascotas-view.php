@@ -4,101 +4,74 @@ use app\controllers\MascotaControlador;
 use app\models\Mascota;
 
 $controlador = new MascotaControlador();
-$mascotas    = $controlador->listar();
+
+// El id viene en la dirección: .../mascota-editar/?id=3
+$id = 0;
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = (int) $_GET['id'];
+}
+
+$mascota = $controlador->obtener($id);
 ?>
 
-<h1 class="title">Mascotas y citas</h1>
+<h1 class="title">Editar mascota</h1>
+<p class="mb-4"><a class="button is-small is-light" href="<?php echo APP_URL; ?>mascotas/">&larr; Volver a la lista</a></p>
 
-<section class="box caja">
-    <h2 class="title is-5">Registrar mascota</h2>
+<?php if ($mascota === null) { ?>
 
-    <form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/mascotaAjax.php" method="POST" autocomplete="off">
-        <input type="hidden" name="accion" value="registrar">
+    <div class="notification is-warning is-light">No se encontró la mascota.</div>
 
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    <label class="label" for="nombre">Nombre</label>
-                    <div class="control">
-                        <input class="input" type="text" id="nombre" name="nombre" maxlength="40" placeholder="Ej. Luna" required>
+<?php } else { ?>
+
+    <section class="box caja">
+        <form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/mascotaAjax.php" method="POST" autocomplete="off">
+            <input type="hidden" name="accion" value="actualizar">
+            <input type="hidden" name="id" value="<?php echo (int) $mascota->getId(); ?>">
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label" for="nombre">Nombre</label>
+                        <div class="control">
+                            <input class="input" type="text" id="nombre" name="nombre" maxlength="40"
+                                   value="<?php echo htmlspecialchars($mascota->getNombre()); ?>" required>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="column">
-                <div class="field">
-                    <label class="label" for="especie">Tipo de mascota</label>
-                    <div class="control">
-                        <div class="select is-fullwidth">
-                            <select id="especie" name="especie" required>
-                                <option value="">Selecciona una opción</option>
-                                <?php foreach (Mascota::ESPECIES as $especie) { ?>
-                                    <option value="<?php echo $especie; ?>"><?php echo ucfirst($especie); ?></option>
-                                <?php } ?>
-                            </select>
+                <div class="column">
+                    <div class="field">
+                        <label class="label" for="especie">Tipo de mascota</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="especie" name="especie" required>
+                                    <?php foreach (Mascota::ESPECIES as $especie) {
+                                        $seleccionada = '';
+                                        if ($especie === $mascota->getEspecie()) {
+                                            $seleccionada = 'selected';
+                                        }
+                                    ?>
+                                        <option value="<?php echo $especie; ?>" <?php echo $seleccionada; ?>><?php echo ucfirst($especie); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field">
+                        <label class="label" for="edad">Edad (años)</label>
+                        <div class="control">
+                            <input class="input" type="number" id="edad" name="edad" min="0" max="40"
+                                   value="<?php echo $mascota->getEdad(); ?>" required>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="column">
-                <div class="field">
-                    <label class="label" for="edad">Edad (años)</label>
-                    <div class="control">
-                        <input class="input" type="number" id="edad" name="edad" min="0" max="40" placeholder="Ej. 2" required>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <button type="submit" class="button is-link is-fullwidth">Guardar cambios</button>
+        </form>
+    </section>
 
-        <button type="submit" class="button is-link is-fullwidth">Registrar</button>
-    </form>
-</section>
-
-<section class="box caja">
-    <h2 class="title is-5">Lista de mascotas</h2>
-
-    <?php if (empty($mascotas)) { ?>
-
-        <p>Todavía no has registrado ninguna mascota.</p>
-
-    <?php } else { ?>
-
-        <div class="table-container">
-            <table class="table tabla is-fullwidth is-bordered is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Mascota</th>
-                        <th>Tipo</th>
-                        <th>Edad</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($mascotas as $mascota) { ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($mascota->getNombre()); ?></td>
-                            <td><?php echo htmlspecialchars(ucfirst($mascota->getEspecie())); ?></td>
-                            <td><?php echo $mascota->getEdad(); ?> años</td>
-                            <td>
-                                <div class="buttons is-justify-content-center">
-                                    <a class="button is-small is-primary" href="<?php echo APP_URL; ?>cita-nueva/?mascota=<?php echo (int) $mascota->getId(); ?>">Agendar cita</a>
-                                    <a class="button is-small is-link" href="<?php echo APP_URL; ?>mascota-editar/?id=<?php echo (int) $mascota->getId(); ?>">Editar</a>
-
-                                    <form class="FormularioAjax" data-confirmar="si"
-                                          data-confirmar-texto="¿Eliminar esta mascota? También se borrarán sus citas."
-                                          action="<?php echo APP_URL; ?>app/ajax/mascotaAjax.php" method="POST">
-                                        <input type="hidden" name="accion" value="eliminar">
-                                        <input type="hidden" name="id" value="<?php echo (int) $mascota->getId(); ?>">
-                                        <button type="submit" class="button is-small is-danger">Eliminar</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
-
-    <?php } ?>
-</section>
+<?php } ?>

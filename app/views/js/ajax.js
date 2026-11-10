@@ -1,3 +1,9 @@
+const Aviso = Swal.mixin({
+  confirmButtonColor: "#283618",
+  cancelButtonColor: "#FF5C5C",
+  background: "#FEF9DE",
+});
+
 const formulario = document.querySelectorAll(".FormularioAjax");
 
 formulario.forEach(function (formulario) {
@@ -13,7 +19,7 @@ formulario.forEach(function (formulario) {
         textoConfirmacion = "Quieres realizar la acción solicitada";
       }
 
-      Swal.fire({
+      Aviso.fire({
         title: "¿Estás seguro?",
         text: textoConfirmacion,
         icon: "question",
@@ -47,7 +53,7 @@ function enviarFormulario(formulario) {
       return mostrarAlerta(resultado);
     })
     .catch(function () {
-      Swal.fire({
+      Aviso.fire({
         icon: "error",
         title: "Error de conexión",
         text: "No se pudo comunicar con el servidor",
@@ -56,7 +62,7 @@ function enviarFormulario(formulario) {
 }
 
 function mostrarAlerta(resultado) {
-  Swal.fire({
+  Aviso.fire({
     icon: resultado.icon,
     title: resultado.titulo,
     html: resultado.texto,
