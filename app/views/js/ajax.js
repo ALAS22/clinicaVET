@@ -1,20 +1,26 @@
-//ventanas sweetAlert
-const Aviso = Aviso.mixin({
+// Estilo común de todas las ventanas de SweetAlert (mismos colores que el diseño)
+const Aviso = Swal.mixin({
   confirmButtonColor: "#283618",
   cancelButtonColor: "#FF5C5C",
   background: "#FEF9DE",
 });
-const formulario = document.querySelectorAll(".FormularioAjax");
 
-formulario.forEach(function (formulario) {
+// Busca todos los formularios que tengan la clase "FormularioAjax"
+const formularios = document.querySelectorAll(".FormularioAjax");
+
+formularios.forEach(function (formulario) {
   formulario.addEventListener("submit", function (evento) {
     evento.preventDefault();
 
-    if (formulario.getAttribute("data-confirmar") === "si") {
-      // Obtener el texto personalizado del formulario
-      let textoConfirmacion = formulario.getAttribute("data-confirmar-texto");
+    const boton = evento.submitter;
 
-      // Si no tiene un texto personalizado, usamos el mensaje predeterminado
+    let origen = formulario;
+    if (boton && boton.getAttribute("data-confirmar") === "si") {
+      origen = boton;
+    }
+
+    if (origen.getAttribute("data-confirmar") === "si") {
+      let textoConfirmacion = origen.getAttribute("data-confirmar-texto");
       if (textoConfirmacion === null) {
         textoConfirmacion = "Quieres realizar la acción solicitada";
       }
@@ -28,19 +34,21 @@ formulario.forEach(function (formulario) {
         cancelButtonText: "Cancelar",
       }).then(function (resultado) {
         if (resultado.isConfirmed) {
-          enviarFormulario(formulario);
+          enviarFormulario(formulario, boton);
         }
       });
     } else {
-      enviarFormulario(formulario);
+      enviarFormulario(formulario, boton);
     }
   });
 });
 
-//---- Mandar formulario al servidor sin recargar pagina
-
-function enviarFormulario(formulario) {
+function enviarFormulario(formulario, boton) {
   const datos = new FormData(formulario);
+
+  if (boton && boton.name) {
+    datos.set(boton.name, boton.value);
+  }
 
   fetch(formulario.getAttribute("action"), {
     method: "POST",
@@ -50,20 +58,20 @@ function enviarFormulario(formulario) {
       return respuesta.json();
     })
     .then(function (resultado) {
-      return mostrarAlerta(resultado);
+      mostrarAlerta(resultado);
     })
     .catch(function () {
       Aviso.fire({
         icon: "error",
         title: "Error de conexión",
-        text: "No se pudo comunicar con el servidor",
+        text: "No se pudo comunicar con el servidor.",
       });
     });
 }
 
 function mostrarAlerta(resultado) {
   Aviso.fire({
-    icon: resultado.icon,
+    icon: resultado.icono,
     title: resultado.titulo,
     html: resultado.texto,
     confirmButtonText: "Aceptar",

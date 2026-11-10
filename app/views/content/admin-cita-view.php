@@ -12,93 +12,120 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 
 $cita = $controlador->obtener($id);
+
+// Valores iniciales que se cambian cuando la cita existe
+$opciones = [];
+$etiquetas = [
+    Cita::PENDIENTE => 'is-warning',
+    Cita::APROBADA  => 'is-success',
+    Cita::ATENDIDA  => 'is-info',
+    Cita::CANCELADA => 'is-danger',
+];
+
+if ($cita !== null) {
+    $opciones = $controlador->opcionesDeEstado($cita);
+}
 ?>
 
-<h1>Gestionar cita</h1>
-<p><a href="<?php echo APP_URL; ?>admin-citas/">&larr; Volver a la lista de citas</a></p>
+<h1 class="title">Detalle de la cita</h1>
 
 <?php if ($cita === null) { ?>
 
-    <p>No se encontró la cita.</p>
+    <div class="notification is-warning is-light">No se encontró la cita.</div>
+    <a class="button is-light" href="<?php echo APP_URL; ?>admin-citas/">&larr; Volver a la lista</a>
 
 <?php } else {
-    $estado  = $cita['cita_estado'];
-    $momento = strtotime($cita['cita_fecha_hora']);
-
-    // Qué acciones tienen sentido según el estado y la hora
-    $puedeAprobar  = ($estado === Cita::PENDIENTE && $momento > time());
-    $puedeAtender  = ($estado === Cita::APROBADA && $momento <= time());
-    $puedeCancelar = in_array($estado, [Cita::PENDIENTE, Cita::APROBADA], true);
+    $estado         = $cita['cita_estado'];
+    $puedeCancelar  = ($estado !== Cita::CANCELADA && in_array(Cita::CANCELADA, $opciones, true));
+    $menuDeshabilitado = '';
+    if (count($opciones) === 1) {
+        $menuDeshabilitado = 'disabled';
+    }
 ?>
 
-    <h2>Datos de la cita</h2>
-    <p>Estado: <strong><?php echo ucfirst($estado); ?></strong></p>
-    <p>Fecha y hora: <?php echo date('d/m/Y H:i', $momento); ?></p>
-    <p>
-        Cliente: <?php echo htmlspecialchars($cita['usuario_nombre']); ?>
-        (<?php echo (int) $cita['usuario_edad']; ?> años) &middot;
-        <?php echo htmlspecialchars($cita['usuario_email']); ?>
-    </p>
-    <p>
-        Mascota: <?php echo htmlspecialchars($cita['mascota_nombre']); ?>,
-        <?php echo htmlspecialchars($cita['mascota_especie']); ?>,
-        <?php echo (int) $cita['mascota_edad']; ?> años
-    </p>
-    <p>Síntomas o motivo:</p>
-    <p><?php echo nl2br(htmlspecialchars($cita['cita_motivo'])); ?></p>
+    <div class="columns">
 
-    <h2>Cambiar el estado</h2>
+        <!-- columna izq: los datos de la cita -->
+        <div class="column">
+            <section class="box caja">
+                <p class="has-text-weight-bold">Cliente</p>
+                <p class="mb-4">
+                    <?php echo htmlspecialchars($cita['usuario_nombre']); ?>
+                    (<?php echo (int) $cita['usuario_edad']; ?> años)
+                    &middot; <?php echo htmlspecialchars($cita['usuario_email']); ?>
+                </p>
 
-    <?php if ($puedeAprobar) { ?>
-        <form class="FormularioAjax" data-confirmar="si" data-confirmar-texto="¿Aprobar esta cita?"
-              action="<?php echo APP_URL; ?>app/ajax/adminCitaAjax.php" method="POST">
-            <input type="hidden" name="accion" value="aprobar">
-            <input type="hidden" name="id" value="<?php echo (int) $cita['cita_id']; ?>">
-            <button type="submit">Aprobar cita</button>
-        </form>
-    <?php } ?>
+                <p class="has-text-weight-bold">Mascota</p>
+                <p class="mb-4">
+                    <?php echo htmlspecialchars($cita['mascota_nombre']); ?> |
+                    <?php echo htmlspecialchars(ucfirst($cita['mascota_especie'])); ?> |
+                    <?php echo (int) $cita['mascota_edad']; ?> años
+                </p>
 
-    <?php if ($puedeAtender) { ?>
-        <form class="FormularioAjax" data-confirmar="si" data-confirmar-texto="¿Marcar esta cita como atendida?"
-              action="<?php echo APP_URL; ?>app/ajax/adminCitaAjax.php" method="POST">
-            <input type="hidden" name="accion" value="atender">
-            <input type="hidden" name="id" value="<?php echo (int) $cita['cita_id']; ?>">
-            <button type="submit">Marcar como atendida</button>
-        </form>
-    <?php } ?>
+                <p class="has-text-weight-bold">Fecha y hora</p>
+                <p class="mb-4"><?php echo date('d/m/Y H:i', strtotime($cita['cita_fecha_hora'])); ?></p>
 
-    <?php if ($estado === Cita::APROBADA && !$puedeAtender) { ?>
-        <p>Podrás marcarla como atendida cuando llegue su hora.</p>
-    <?php } ?>
+                <p class="has-text-weight-bold">Motivo</p>
+                <p class="mb-4"><?php echo nl2br(htmlspecialchars($cita['cita_motivo'])); ?></p>
 
-    <?php if ($puedeCancelar) { ?>
-        <form class="FormularioAjax" data-confirmar="si"
-              data-confirmar-texto="¿Cancelar esta cita? El horario quedará libre."
-              action="<?php echo APP_URL; ?>app/ajax/adminCitaAjax.php" method="POST">
-            <input type="hidden" name="accion" value="cancelar">
-            <input type="hidden" name="id" value="<?php echo (int) $cita['cita_id']; ?>">
+                <p class="has-text-weight-bold">Estado actual</p>
+                <span class="tag is-rounded <?php echo $etiquetas[$estado]; ?>"><?php echo ucfirst($estado); ?></span>
+            </section>
 
-            <label>Motivo de la cancelación (opcional, el cliente lo verá)</label><br>
-            <textarea name="comentario" rows="3" maxlength="500"></textarea><br>
+            <a class="button is-light" href="<?php echo APP_URL; ?>admin-citas/">&larr; Volver a la lista</a>
+        </div>
 
-            <button type="submit">Cancelar cita</button>
-        </form>
-    <?php } ?>
+        <!-- Columna derecha: comentario, estado y botones -->
+        <div class="column">
+            <section class="box caja">
+                <form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/adminCitaAjax.php" method="POST" autocomplete="off">
+                    <input type="hidden" name="id" value="<?php echo (int) $cita['cita_id']; ?>">
 
-    <?php if (!$puedeAprobar && !$puedeAtender && !$puedeCancelar) { ?>
-        <p>Esta cita ya no admite cambios de estado.</p>
-    <?php } ?>
+                    <div class="field">
+                        <label class="label" for="comentario">Comentario para el cliente</label>
+                        <div class="control">
+                            <textarea class="textarea" id="comentario" name="comentario" rows="5" maxlength="500"><?php echo htmlspecialchars((string) $cita['cita_comentario']); ?></textarea>
+                        </div>
+                        <p class="help">Si lo dejas vacío y guardas, se borra el comentario.</p>
+                    </div>
 
-    <h2>Comentario para el cliente</h2>
+                    <div class="field">
+                        <label class="label" for="estado">Estado</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="estado" name="estado" <?php echo $menuDeshabilitado; ?>>
+                                    <?php foreach ($opciones as $opcion) {
+                                        $seleccionada = '';
+                                        if ($opcion === $estado) {
+                                            $seleccionada = 'selected';
+                                        }
+                                    ?>
+                                        <option value="<?php echo $opcion; ?>" <?php echo $seleccionada; ?>><?php echo ucfirst($opcion); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
 
-    <form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/adminCitaAjax.php" method="POST">
-        <input type="hidden" name="accion" value="comentar">
-        <input type="hidden" name="id" value="<?php echo (int) $cita['cita_id']; ?>">
+                        <?php if (count($opciones) === 1) { ?>
+                            <p class="help">Esta cita ya no admite cambios de estado.</p>
+                        <?php } ?>
+                    </div>
 
-        <textarea name="comentario" rows="4" maxlength="500"><?php echo htmlspecialchars((string) $cita['cita_comentario']); ?></textarea><br>
+                    <button type="submit" name="accion" value="guardar" class="button is-success is-light is-fullwidth mb-3">
+                        Guardar cambios
+                    </button>
 
-        <button type="submit">Guardar comentario</button>
-    </form>
-    <p>Si dejas el cuadro vacío y guardas, se borra el comentario.</p>
+                    <?php if ($puedeCancelar) { ?>
+                        <button type="submit" name="accion" value="cancelar" class="button is-danger is-light is-fullwidth"
+                                data-confirmar="si"
+                                data-confirmar-texto="¿Cancelar esta cita? El horario quedará libre y el cliente verá tu comentario.">
+                            Cancelar cita
+                        </button>
+                    <?php } ?>
+                </form>
+            </section>
+        </div>
+
+    </div>
 
 <?php } ?>

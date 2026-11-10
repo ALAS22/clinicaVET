@@ -83,7 +83,77 @@ class AdminCitaControlador extends ControladorBase
     public function resumen(): array{
         return $this->modelo->contarPorEstado();
     }
+    
+    public function opcionesDeEstado(array $cita): array{
+        $actual  = $cita['cita_estado'];
+        $yaLlego = strtotime($cita['cita_fecha_hora']) <= time();
+        $opciones =[$actual];
 
+        if ($actual === Cita::PENDIENTE) {
+            if (!$yaLlego) {
+                $opciones[] = Cita::APROBADA;
+            }
+             $opciones[] = Cita::CANCELADA;
+        }
+        if ($actual === Cita::APROBADA) {
+            if ($yaLlego) {
+                $opciones[] = Cita::ATENDIDA;
+            }
+            $opciones[] = Cita::CANCELADA;
+        }
+        return $opciones;
+    }
+
+    Public function guardar(array $datos): array{
+        $id          = (int) ($datos['id'] ?? 0);
+        $comentario  = $this->leerTexto($datos, 'comentario');
+        $estadoNuevo = $this->leerTexto($datos, 'estado');
+
+         if (mb_strlen($comentario) > 500) {
+            return $this->respuesta('error', 'Comentario muy largo', 'El comentario puede tener hasta 500 caracteres.');
+        }
+
+        $cita = $this->modelo->detalle($id);
+        if ($cita === null) {
+            return $this->respuesta('error', 'No encontrada', 'No se encontró la cita.');
+        }
+        $estadoActual = $cita['cita_estado'];
+         if ($estadoNuevo === '' || $estadoNuevo === $estadoActual) {
+            if (!$this->modelo->guardarComentario($id, $comentario)) {
+                return $this->respuesta('error', 'No se pudo guardar', 'Intenta de nuevo más tarde.');
+            }
+
+            return $this->respuesta(
+                'success',
+                'Cambios guardados',
+                'El cliente verá el comentario en "Mis citas".',
+                $this->urlDetalle($id)
+            );
+         }
+         if (!in_array($estadoNuevo, $this->opcionesDeEstado($cita), true)) {
+            return $this->respuesta(
+                'error',
+                'Cambio no permitido',
+                'No se puede pasar la cita de "' . $estadoActual . '" a "' . htmlspecialchars($estadoNuevo) . '".'
+            );
+        }
+
+        if (!$this->modelo->cambiarEstado($id, $estadoActual, $estadoNuevo, $comentario)) {
+            return $this->respuesta(
+                'error',
+                'No se pudo guardar',
+                'La cita cambió mientras la editabas. Recarga la página e inténtalo de nuevo.'
+            );
+        }
+
+        return $this->respuesta(
+            'success',
+            'Cambios guardados',
+            'La cita quedó como "' . $estadoNuevo . '".',
+            $this->urlDetalle($id)
+        );
+
+    }
     //---- Aprobar ----//
     public function aprobar(array $datos): array{
         $id = (int) ($datos['id'] ?? 0);

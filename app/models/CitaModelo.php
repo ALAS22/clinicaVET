@@ -249,9 +249,9 @@ class CitaModelo extends ModeloBase
 
         return $conteo;
     }
-
+    //ADMINISTRADOR
     //---- Cambios de estado ----//
-    // En cada UPDATE, el WHERE pide el estado. si la cita ya cambió, no se toca
+    // En cada UPDATE, el WHERE pide el estado. si la cita ya cambio, no se toca
 
     public function aprobar(int $id, string $ahora): bool{
         try {
@@ -317,6 +317,29 @@ class CitaModelo extends ModeloBase
             return false;
         }
     }
+     public function cambiarEstado(int $id, string $estadoActual, string $estadoNuevo, string $comentario) :bool{
+        $valor = null;
+        if($comentario !== ''){
+            $valor = $comentario;
+        }
+
+        try {
+            $sql = $this->conectar()->prepare(
+                'UPDATE cita SET cita_estado = :nuevo, cita_comentario = :comentario
+                 WHERE cita_id = :id AND cita_estado = :actual'
+            );
+            $sql->execute([
+                ':nuevo'      => $estadoNuevo,
+                ':comentario' => $valor,
+                ':id'         => $id,
+                ':actual'     => $estadoActual,
+            ]);
+            return $sql->rowCount() === 1;
+        } catch (PDOException $e) {
+            return false;
+        }
+
+     }
     //---- Convierte una fila de la BD en un objeto Cita ----//
     private function crearCita(array $f): Cita{
         return new Cita(

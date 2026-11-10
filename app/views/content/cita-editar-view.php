@@ -13,11 +13,20 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = (int) $_GET['id'];
 }
 
-$cita        = $citaControlador->obtener($id);
-$modificable = ($cita !== null && $cita->esModificable());
+$cita = $citaControlador->obtener($id);
 
-if ($modificable) {
-    $nombreMascota = '';
+// Valores iniciales: se reemplazan solo si la cita existe y se puede modificar
+$nombreMascota = '';
+$fechaActual   = '';
+$horaActual    = '';
+$fecha         = '';
+$errorDia      = '';
+$horarios      = [];
+$hayLibres     = false;
+$hoy           = date('Y-m-d');
+$maximo        = date('Y-m-d', strtotime('+' . Cita::DIAS_ADELANTE . ' days'));
+
+if ($cita !== null && $cita->esModificable()) {
     $mascota = $mascotaControlador->obtener($cita->getMascotaId());
     if ($mascota !== null) {
         $nombreMascota = $mascota->getNombre();
@@ -32,9 +41,7 @@ if ($modificable) {
         $fecha = $_GET['fecha'];
     }
 
-    $errorDia  = $citaControlador->errorDia($fecha);
-    $horarios  = [];
-    $hayLibres = false;
+    $errorDia = $citaControlador->errorDia($fecha);
 
     if ($errorDia === '') {
         // El segundo dato excluye esta misma cita, para que su horario actual aparezca libre
@@ -46,16 +53,13 @@ if ($modificable) {
             }
         }
     }
-
-    $hoy    = date('Y-m-d');
-    $maximo = date('Y-m-d', strtotime('+' . Cita::DIAS_ADELANTE . ' days'));
 }
 ?>
 
 <h1 class="title">Modificar cita</h1>
 <p class="mb-4"><a class="button is-small is-light" href="<?php echo APP_URL; ?>citas/">&larr; Volver a mis citas</a></p>
 
-<?php if (!$modificable) { ?>
+<?php if ($cita === null || !$cita->esModificable()) { ?>
 
     <div class="notification is-warning is-light">No se encontró la cita, o ya no se puede modificar.</div>
 

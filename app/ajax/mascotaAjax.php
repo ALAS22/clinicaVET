@@ -10,6 +10,7 @@ use app\models\Usuario;
 SesionControlador::iniciar();
 
 header('Content-Type: application/json; charset=utf-8');
+
 // Todos los datos deben ser texto. Si llega un arreglo (por ejemplo nombre[]=x), se rechaza
 foreach ($_POST as $valor) {
     if (!is_string($valor)) {
@@ -22,7 +23,8 @@ foreach ($_POST as $valor) {
         exit;
     }
 }
-// Solo los clientes con sesion iniciada pueden usar este archivo
+
+// Solo los clientes con sesión iniciada pueden usar este archivo
 if (!SesionControlador::hayUsuario() || SesionControlador::getRol() !== Usuario::ROL_CLIENTE) {
     echo json_encode([
         'icono'     => 'error',

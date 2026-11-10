@@ -1,6 +1,13 @@
-/*VARIABLES*/
+/* ==========================================================
+   Clínica VET · estilos propios (se cargan DESPUÉS de Bulma)
+   Orden: 1) variables y tema de Bulma  2) base  3) acceso
+          4) formularios de acceso  5) barra  6) componentes
+          7) celulares
+   ========================================================== */
 
-.root {
+/* ---------- 1. Variables ---------- */
+:root {
+  /* Colores (aproximados del diseño: ajústalos con los códigos reales) */
   --crema: #fef9de;
   --verde: #283618;
   --naranja: #dda15e;
@@ -12,21 +19,51 @@
   --gris-claro: #e8e8e8;
   --gris-borde: #d4d4d4;
 
-  /*etiquetas de estado*/
-  --estado-pendiente: #dda15e;
-  --estado-aprobada: #bfdfa0;
-  --estado-atendida: #4ddde0;
-  --estado-cancelada: #f59a9a;
-
-  /*Tipografia*/
+  /* Tipografía */
   --fuente-titulos: "Fredoka", "Trebuchet MS", sans-serif;
   --fuente-texto: "Open Sans", Arial, sans-serif;
 
-  /*tamaños de botodnes y cajas*/
+  /* Medidas */
   --radio-pildora: 999px;
   --radio-caja: 10px;
 }
-/*Base*/
+
+/* ---------- 1b. Tema de Bulma: sus colores salen de nuestra paleta ----------
+   Bulma define cada color con tres números: matiz (h), saturación (s) y luminosidad (l).
+   Son equivalentes a los colores de arriba, en formato HSL. */
+:root {
+  /* primary = verde oscuro  (#283618) */
+  --bulma-primary-h: 88deg;
+  --bulma-primary-s: 38%;
+  --bulma-primary-l: 15%;
+
+  /* link = azul de los botones de acción  (#5470FF) */
+  --bulma-link-h: 230deg;
+  --bulma-link-s: 100%;
+  --bulma-link-l: 66%;
+
+  /* danger = rojo de cancelar  (#FF5C5C) */
+  --bulma-danger-h: 0deg;
+  --bulma-danger-s: 100%;
+  --bulma-danger-l: 68%;
+
+  /* warning = naranja arena, estado "pendiente"  (#DDA15E) */
+  --bulma-warning-h: 32deg;
+  --bulma-warning-s: 65%;
+  --bulma-warning-l: 62%;
+
+  /* success = verde claro, estado "aprobada"  (#BFDFA0) */
+  --bulma-success-h: 90deg;
+  --bulma-success-s: 50%;
+  --bulma-success-l: 75%;
+
+  /* info = cian, estado "atendida"  (#4DDDE0) */
+  --bulma-info-h: 181deg;
+  --bulma-info-s: 70%;
+  --bulma-info-l: 59%;
+}
+
+/* ---------- 2. Base ---------- */
 *,
 *::before,
 *::after {
@@ -48,6 +85,15 @@ h3 {
   font-family: var(--fuente-titulos);
 }
 
+.title,
+.subtitle {
+  font-family: var(--fuente-titulos);
+}
+
+.title {
+  font-weight: 700;
+}
+
 a {
   color: var(--verde);
 }
@@ -56,8 +102,7 @@ img {
   max-width: 100%;
 }
 
-/*Pantalla de acceso, login, 404, registro*/
-
+/* ---------- 3. Pantallas de acceso (login, registro, 404) ---------- */
 .acceso {
   display: flex;
   min-height: 100vh;
@@ -108,7 +153,7 @@ img {
   font-weight: 700;
 }
 
-/*Formulario y botones*/
+/* ---------- 4. Formularios de acceso (campos en píldora) ---------- */
 .formulario {
   width: 100%;
   max-width: 330px;
@@ -137,17 +182,11 @@ img {
   border-radius: var(--radio-pildora);
 }
 
-.campo textarea {
-  border-radius: var(--radio-caja);
-}
-
 .campo input::placeholder {
   color: #777777;
 }
 
-.campo input:focus,
-.campo select:focus,
-.campo textarea:focus {
+.campo input:focus {
   outline: 3px solid var(--naranja);
   outline-offset: 2px;
 }
@@ -177,7 +216,6 @@ img {
   outline-offset: 2px;
 }
 
-/*Formulario registro(6 columnas)*/
 .formulario--registro {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -204,16 +242,124 @@ img {
   max-width: 330px;
 }
 
-/*Cont de la app*/
+/* ---------- 5. Barra de navegación ---------- */
+.barra {
+  color: var(--blanco);
+}
+
+.barra--cliente {
+  background: var(--naranja);
+}
+
+.barra--admin {
+  background: var(--verde);
+}
+
+.barra__titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ---------- 6. Componentes de la aplicación ---------- */
 .contenido {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
 }
-/*celulares y pantallas*/
+
+/* Respaldo para las pantallas que aún no usan clases de Bulma (administrador, Etapa 3) */
+.contenido > h1:not(.title) {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.contenido > h2:not(.title):not(.subtitle) {
+  margin: 1.2rem 0 0.6rem;
+  font-size: 1.4rem;
+}
+
+/* Cajas blancas con borde fino, como en el diseño */
+.caja {
+  background: var(--blanco);
+  border: 1px solid #555555;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* Tablas: encabezado gris y celdas centradas */
+.tabla thead th {
+  background: var(--gris-claro);
+  text-align: center;
+}
+
+.tabla td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tabla td.texto-izquierda {
+  text-align: left;
+}
+
+/* Pestañas */
+.tabs a {
+  color: #555555;
+}
+
+.tabs li.is-active a {
+  color: var(--texto);
+  border-bottom-color: var(--texto);
+  font-weight: 700;
+}
+
+/* Horarios: cada hora es un botón que se elige */
+.horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.horario {
+  position: relative;
+}
+
+/* El círculo de radio se oculta, pero sigue funcionando con el teclado */
+.horario input {
+  position: absolute;
+  opacity: 0;
+}
+
+.horario span {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--blanco);
+  border: 2px solid var(--verde);
+  border-radius: var(--radio-pildora);
+  cursor: pointer;
+}
+
+.horario input:checked + span {
+  color: var(--crema);
+  background: var(--verde);
+}
+
+.horario input:focus-visible + span {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+.horario input:disabled + span {
+  opacity: 0.45;
+  text-decoration: line-through;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+/* ---------- 7. Celulares y pantallas pequeñas ---------- */
 @media (max-width: 800px) {
   .acceso {
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; /* el panel con el logo queda arriba */
   }
 
   .acceso__marca {
@@ -232,5 +378,9 @@ img {
   .campo--3,
   .campo--2 {
     grid-column: 1 / -1;
+  }
+
+  .contenido {
+    padding: 1rem;
   }
 }

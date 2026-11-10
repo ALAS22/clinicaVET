@@ -24,7 +24,7 @@ foreach ($_POST as $valor) {
     }
 }
 
-// Solo el administrador con sesion iniciada puede usar este archivo
+// Solo el administrador con sesión iniciada puede usar este archivo
 if (!SesionControlador::hayUsuario() || SesionControlador::getRol() !== Usuario::ROL_ADMIN) {
     echo json_encode([
         'icono'     => 'error',
@@ -57,6 +57,10 @@ switch ($accion) {
 
     case 'comentar':
         $respuesta = $controlador->comentar($_POST);
+        break;
+    
+        case 'guardar':
+            $respuesta = $controlador->guardar($_POST);
         break;
 
     default:
