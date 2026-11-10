@@ -28,9 +28,7 @@
   --radio-caja: 10px;
 }
 
-/* ---------- 1b. Tema de Bulma: sus colores salen de nuestra paleta ----------
-   Bulma define cada color con tres números: matiz (h), saturación (s) y luminosidad (l).
-   Son equivalentes a los colores de arriba, en formato HSL. */
+/*  BULMA */
 :root {
   /* primary = verde oscuro  (#283618) */
   --bulma-primary-h: 88deg;

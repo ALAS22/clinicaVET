@@ -93,14 +93,14 @@ $base = [
 <?php } else { ?>
 
 <div class="table-container">
-    <table class="table tabla is-fullwidth is-bordered is-hoverable">
+    <table class="table tabla tabla-apilada is-fullwidth is-bordered is-hoverable">
         <thead>
             <tr>
-                <th>Fecha y hora</th>
-                <th>Cliente</th>
-                <th>Mascota</th>
-                <th>Estado</th>
-                <th>Acción</th>
+                <td data-label="Fecha y hora">Fecha y hora</td>
+                <td class="texto-izquierda" data-label="Cliente">Cliente</td>
+                <td data-label="Mascota">Mascota</td>
+                <td data-label="Estado">Estado</td>
+                <td data-label="Acción">Acción</td>
             </tr>
         </thead>
         <tbody>

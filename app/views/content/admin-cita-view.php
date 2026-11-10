@@ -5,7 +5,7 @@ use app\models\Cita;
 
 $controlador = new AdminCitaControlador();
 
-// El id viene en la dirección: .../admin-cita/?id=3
+// El id viene en la direccion: .../admin-cita/?id=3
 $id = 0;
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = (int) $_GET['id'];

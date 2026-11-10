@@ -76,16 +76,16 @@ $etiquetas = [
 <?php } else { ?>
 
     <div class="table-container">
-        <table class="table tabla is-fullwidth is-bordered">
+        <table class="table tabla tabla-apilada is-fullwidth is-bordered    ">
             <thead>
                 <tr>
-                    <th>Mascota</th>
-                    <th>Fecha</th>
-                    <th>Motivo</th>
-                    <th>Estado</th>
-                    <th>Comentario</th>
+                    <td data-label="Mascota">Mascota</td>
+                    <td data-label="Fecha">Fecha</td>
+                    <td class="texto-izquierda" data-label="Motivo">Motivo</td>
+                    <td data-label="Estado">Estado</td>
+                    <td class="texto-izquierda" data-label="Comentario">Comentario</td>
                     <?php if ($ver === 'pendientes') { ?>
-                        <th>Opciones</th>
+                        <td data-label="Opciones">Opciones</td>
                     <?php } ?>
                 </tr>
             </thead>
