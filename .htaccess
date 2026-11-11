@@ -4,5 +4,5 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Todo lo demás se manda a index.php, diciéndole qué página se pidió
+# Todo lo demas se manda a index.php, diciendole que pagina se pidio
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?vista=$1 [L,QSA]
