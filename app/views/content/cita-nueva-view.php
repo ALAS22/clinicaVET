@@ -9,13 +9,13 @@ $mascotaControlador = new MascotaControlador();
 
 $mascotas = $mascotaControlador->listar();
 
-// Mascota preseleccionada: .../cita-nueva/?mascota=3 (viene del botón "Agendar cita" de la lista)
+//mascota dir /cita-nueva/?mascota=3
 $mascotaElegida = 0;
 if (isset($_GET['mascota']) && is_numeric($_GET['mascota'])) {
     $mascotaElegida = (int) $_GET['mascota'];
 }
 
-// El día elegido viene en la dirección: .../cita-nueva/?fecha=2026-11-02
+// dir /cita-nueva/?fecha=2026-11-02
 $fecha = '';
 if (isset($_GET['fecha']) && is_string($_GET['fecha'])) {
     $fecha = $_GET['fecha'];
@@ -39,7 +39,7 @@ if ($fecha !== '') {
     }
 }
 
-// Límites del calendario (solo una ayuda visual: el servidor vuelve a validar)
+//limites del calendario
 $hoy    = date('Y-m-d');
 $maximo = date('Y-m-d', strtotime('+' . Cita::DIAS_ADELANTE . ' days'));
 ?>

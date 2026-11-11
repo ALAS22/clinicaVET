@@ -16,8 +16,6 @@ class AdminCitaControlador extends ControladorBase
         $this->modelo = new CitaModelo();
     }
 
-    //----- Lo que usan las vistas ----//
-
     // Lee y limpia los filtros que vienen en la dirección (?estado=...&fecha=...&q=...&pagina=...)
     // Cualquier valor raro se ignora y queda el valor por defecto
     public function leerFiltros(array $datos): array{
@@ -48,7 +46,7 @@ class AdminCitaControlador extends ControladorBase
         return ['estado' => $estado, 'fecha' => $fecha, 'q' => $busqueda, 'pagina' => $pagina];
     }
 
-    // Devuelve la pagina de citas y los datos para armar el paginador
+    // Devuelve la pagina de citas y los datos 
     public function listar(array $filtros): array{
         $total = $this->modelo->contarTodas($filtros['estado'], $filtros['fecha'], $filtros['q']);
 
@@ -57,7 +55,7 @@ class AdminCitaControlador extends ControladorBase
             $paginas = 1;
         }
 
-        // Si piden una página que no existe, se muestra la última
+        //pagina que no existe->muestra la última
         $pagina = $filtros['pagina'];
         if ($pagina > $paginas) {
             $pagina = $paginas;
@@ -258,7 +256,7 @@ class AdminCitaControlador extends ControladorBase
         return APP_URL . 'admin-cita/?id=' . $id;
     }
 
-    // Lee un campo de texto del formulario (si no llego o no es texto, regresa '')
+    // Lee un campo de texto del formulario
     private function leerTexto(array $datos, string $campo): string{
         if (isset($datos[$campo]) && is_string($datos[$campo])) {
             return trim($datos[$campo]);

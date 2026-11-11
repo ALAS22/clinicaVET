@@ -24,7 +24,7 @@ foreach ($_POST as $valor) {
 
 $controlador = new UsuarioControlador();
 
-// Solo se aceptan peticiones POST, y el campo "accion" decide qué hacer
+// Solo se aceptan peticiones POST, y el campo "accion" decide q hacer
 $accion = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && is_string($_POST['accion'])) {
     $accion = $_POST['accion'];

@@ -5,7 +5,7 @@ use app\models\Mascota;
 
 $controlador = new MascotaControlador();
 
-// El id viene en la dirección: .../mascota-editar/?id=3
+//id en /mascota-editar/?id=3
 $id = 0;
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = (int) $_GET['id'];

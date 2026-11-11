@@ -11,6 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <!-- Bulma -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 <link rel="stylesheet" href="<?php echo APP_URL; ?>app/views/css/estilos.css">
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -1,25 +1,16 @@
-/* ==========================================================
-   Clínica VET · estilos propios (se cargan DESPUÉS de Bulma)
-   Orden: 1) variables y tema de Bulma  2) base  3) acceso
-          4) formularios de acceso  5) barra  6) componentes
-          7) celulares
-   ========================================================== */
-
-/* ---------- 1. Variables ---------- */
 :root {
-  /* Colores (aproximados del diseño: ajústalos con los códigos reales) */
   --crema: #fef9de;
   --verde: #283618;
   --naranja: #dda15e;
   --vino: #5e1515;
   --azul: #5470ff;
   --rojo: #ff5c5c;
-  --texto: #1a1a1a;
+  --texto: #202020;
   --blanco: #ffffff;
   --gris-claro: #e8e8e8;
   --gris-borde: #d4d4d4;
 
-  /* Tipografía */
+  /* Tipografia */
   --fuente-titulos: "Fredoka", "Trebuchet MS", sans-serif;
   --fuente-texto: "Open Sans", Arial, sans-serif;
 
@@ -30,38 +21,37 @@
 
 /*  BULMA */
 :root {
-  /* primary = verde oscuro  (#283618) */
+  /* verde*/
   --bulma-primary-h: 88deg;
   --bulma-primary-s: 38%;
   --bulma-primary-l: 15%;
 
-  /* link = azul de los botones de acción  (#5470FF) */
+  /* boton azul(#5470FF) */
   --bulma-link-h: 230deg;
   --bulma-link-s: 100%;
   --bulma-link-l: 66%;
 
-  /* danger = rojo de cancelar  (#FF5C5C) */
+  /* boton rojo(#FF5C5C) */
   --bulma-danger-h: 0deg;
   --bulma-danger-s: 100%;
   --bulma-danger-l: 68%;
 
-  /* warning = naranja arena, estado "pendiente"  (#DDA15E) */
+  /* naranja pendiente  (#DDA15E) */
   --bulma-warning-h: 32deg;
   --bulma-warning-s: 65%;
   --bulma-warning-l: 62%;
 
-  /* success = verde claro, estado "aprobada"  (#BFDFA0) */
+  /* verde aprobada (#BFDFA0) */
   --bulma-success-h: 90deg;
   --bulma-success-s: 50%;
   --bulma-success-l: 75%;
 
-  /* info = cian, estado "atendida"  (#4DDDE0) */
+  /* azul atendida  (#4DDDE0) */
   --bulma-info-h: 181deg;
   --bulma-info-s: 70%;
   --bulma-info-l: 59%;
 }
 
-/* ---------- 2. Base ---------- */
 *,
 *::before,
 *::after {
@@ -100,7 +90,7 @@ img {
   max-width: 100%;
 }
 
-/* ---------- 3. Pantallas de acceso (login, registro, 404) ---------- */
+/* pantallas de acceso*/
 .acceso {
   display: flex;
   min-height: 100vh;
@@ -151,7 +141,7 @@ img {
   font-weight: 700;
 }
 
-/* ---------- 4. Formularios de acceso (campos en píldora) ---------- */
+/* formularios */
 .formulario {
   width: 100%;
   max-width: 330px;
@@ -240,7 +230,7 @@ img {
   max-width: 330px;
 }
 
-/* ---------- 5. Barra de navegación ---------- */
+/*barra*/
 .barra {
   color: var(--blanco);
 }
@@ -259,14 +249,12 @@ img {
   font-weight: 600;
 }
 
-/* ---------- 6. Componentes de la aplicación ---------- */
 .contenido {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
 }
 
-/* Respaldo para las pantallas que aún no usan clases de Bulma (administrador, Etapa 3) */
 .contenido > h1:not(.title) {
   margin-bottom: 1rem;
   font-size: 2rem;
@@ -277,7 +265,7 @@ img {
   font-size: 1.4rem;
 }
 
-/* Cajas blancas con borde fino, como en el diseño */
+/* Cajas blancas*/
 .caja {
   background: var(--blanco);
   border: 1px solid #555555;
@@ -285,7 +273,7 @@ img {
   box-shadow: none;
 }
 
-/* Tablas: encabezado gris y celdas centradas */
+/* Tablas*/
 .tabla thead th {
   background: var(--gris-claro);
   text-align: center;
@@ -300,7 +288,7 @@ img {
   text-align: left;
 }
 
-/* Pestañas */
+/* Pestañas*/
 .tabs a {
   color: #555555;
 }
@@ -311,7 +299,7 @@ img {
   font-weight: 700;
 }
 
-/* Horarios: cada hora es un botón que se elige */
+/*horarios:boton que se elige*/
 .horarios {
   display: flex;
   flex-wrap: wrap;
@@ -322,7 +310,6 @@ img {
   position: relative;
 }
 
-/* El círculo de radio se oculta, pero sigue funcionando con el teclado */
 .horario input {
   position: absolute;
   opacity: 0;
@@ -354,10 +341,10 @@ img {
   cursor: not-allowed;
 }
 
-/* ---------- 7. Celulares y pantallas pequeñas ---------- */
+/*Pantalla pequeña*/
 @media (max-width: 800px) {
   .acceso {
-    flex-direction: column-reverse; /* el panel con el logo queda arriba */
+    flex-direction: column-reverse;
   }
 
   .acceso__marca {

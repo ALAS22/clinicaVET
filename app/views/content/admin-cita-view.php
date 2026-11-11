@@ -13,7 +13,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 $cita = $controlador->obtener($id);
 
-// Valores iniciales que se cambian cuando la cita existe
+
 $opciones = [];
 $etiquetas = [
     Cita::PENDIENTE => 'is-warning',
@@ -45,7 +45,7 @@ if ($cita !== null) {
 
     <div class="columns">
 
-        <!-- columna izq: los datos de la cita -->
+        <!-- Columna izquierda: los datos de la cita -->
         <div class="column">
             <section class="box caja">
                 <p class="has-text-weight-bold">Cliente</p>

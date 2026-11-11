@@ -6,7 +6,7 @@ use app\models\Cita;
 $controlador = new CitaControlador();
 $todas       = $controlador->listar();
 
-// Pendientes = citas activas (pendiente o aprobada) que aún no llegan; Historial = el resto
+//pendientes
 $pendientes = [];
 $historial  = [];
 
@@ -20,10 +20,10 @@ foreach ($todas as $cita) {
     }
 }
 
-// listar() trae las más lejanas primero; en Pendientes queremos las más próximas primero
+//pendientes: las mas prontas primero
 $pendientes = array_reverse($pendientes);
 
-// Pestaña elegida: .../citas/?ver=historial
+///citas/?ver=historial
 $ver = 'pendientes';
 if (isset($_GET['ver']) && $_GET['ver'] === 'historial') {
     $ver = 'historial';
@@ -38,7 +38,7 @@ if ($ver === 'historial') {
     $claseHist = 'is-active';
 }
 
-// Color de la etiqueta de cada estado (los define el tema de Bulma en estilos.css)
+// Color de etiqueta
 $etiquetas = [
     Cita::PENDIENTE => 'is-warning',
     Cita::APROBADA  => 'is-success',

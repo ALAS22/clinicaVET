@@ -12,7 +12,7 @@ class Cita{
 
     public const ESTADOS = [self::PENDIENTE, self::APROBADA, self::CANCELADA, self::ATENDIDA];
 
-    // Horario de la Clinica
+    // Horario de la clinica
     public const HORA_INICIO   = 9;    // primera cita a las 9
     public const HORA_FIN      = 17;   // cierra a las 17:00 (última cita a las 16
     public const DIAS_ADELANTE = 60;   // dias de anticipacion para agendar
@@ -64,7 +64,7 @@ class Cita{
     // Valida solo el dia
     public static function validarDia(string $fecha): array
     {
-        // el "!" hace que la hora quede en 00:00:00
+        // el ! hace que la hora quede en 00:00:00
         $dia = DateTime::createFromFormat('!Y-m-d', $fecha);
 
         // Si la fecha no existe, PHP la corrige, aquí lo detectamos

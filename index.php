@@ -11,26 +11,26 @@ SesionControlador::iniciar();
 
 $vistaControlador = new VistaControlador();
 
-// 1) ¿Qué página pidió el usuario? Si no pidió ninguna, es el login
+// pagina. Default: login
 $pedida = 'login';
 if (isset($_GET['vista']) && is_string($_GET['vista']) && $_GET['vista'] !== '') {
     $pedida = $_GET['vista'];
 }
 
-// 2) ¿Existe esa página?
+// Existencia de la pagina
 $vista = $vistaControlador->obtenerVista($pedida);
 if ($vista === '404') {
     http_response_code(404);
 }
 
-// 3) ¿Puede verla este usuario? Si no, lo mandamos a donde corresponde
+//visualizacion del usuario
 $destino = $vistaControlador->redireccion($vista);
 if ($destino !== '') {
     header('Location: ' . $destino);
     exit;
 }
 
-// 4) Título de la pestaña del navegador
+// titulo de pestaña
 if ($vista === 'inicio') {
     $principal = 'mascotas/';
     if (SesionControlador::getRol() === Usuario::ROL_ADMIN) {
@@ -59,8 +59,7 @@ if (isset($titulos[$vista])) {
     $tituloPagina = $titulos[$vista];
 }
 
-// 5) Las pantallas de acceso llevan el panel verde con el logo;
-//    las demás llevarán la barra de navegación (Etapa 2)
+// pantallas de acceso y de navegacion
 $esAcceso = in_array($vista, ['login', 'registro', '404'], true);
 
 $claseBody = 'pagina-app';

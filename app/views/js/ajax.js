@@ -1,11 +1,8 @@
-// Estilo común de todas las ventanas de SweetAlert (mismos colores que el diseño)
 const Aviso = Swal.mixin({
   confirmButtonColor: "#283618",
   cancelButtonColor: "#FF5C5C",
   background: "#FEF9DE",
 });
-
-// Busca todos los formularios que tengan la clase "FormularioAjax"
 const formularios = document.querySelectorAll(".FormularioAjax");
 
 formularios.forEach(function (formulario) {
@@ -15,12 +12,13 @@ formularios.forEach(function (formulario) {
     const boton = evento.submitter;
 
     let origen = formulario;
-    if (boton && boton.getAttribute("data-confirmar") === "si") {
+    if (boton && boton.hasAttribute("data-confirmar")) {
       origen = boton;
     }
 
     if (origen.getAttribute("data-confirmar") === "si") {
       let textoConfirmacion = origen.getAttribute("data-confirmar-texto");
+
       if (textoConfirmacion === null) {
         textoConfirmacion = "Quieres realizar la acción solicitada";
       }
@@ -43,11 +41,12 @@ formularios.forEach(function (formulario) {
   });
 });
 
+// Manda los datos del formulario al servidor sin recargar la pagina
 function enviarFormulario(formulario, boton) {
   const datos = new FormData(formulario);
 
   if (boton && boton.name) {
-    datos.set(boton.name, boton.value);
+    datos.append(boton.name, boton.value);
   }
 
   fetch(formulario.getAttribute("action"), {
@@ -58,13 +57,13 @@ function enviarFormulario(formulario, boton) {
       return respuesta.json();
     })
     .then(function (resultado) {
-      mostrarAlerta(resultado);
+      return mostrarAlerta(resultado);
     })
     .catch(function () {
       Aviso.fire({
         icon: "error",
         title: "Error de conexión",
-        text: "No se pudo comunicar con el servidor.",
+        text: "No se pudo comunicar con el servidor",
       });
     });
 }

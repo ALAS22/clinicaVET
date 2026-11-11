@@ -15,7 +15,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 $cita = $citaControlador->obtener($id);
 
-// Valores iniciales: se reemplazan solo si la cita existe y se puede modificar
+
 $nombreMascota = '';
 $fechaActual   = '';
 $horaActual    = '';
@@ -35,7 +35,7 @@ if ($cita !== null && $cita->esModificable()) {
     $fechaActual = substr($cita->getFechaHora(), 0, 10);   // AAAA-MM-DD
     $horaActual  = substr($cita->getFechaHora(), 11, 5);   // HH:MM
 
-    // Día elegido: el de la dirección, o el de la cita si aún no se elige otro
+    //dia elegido
     $fecha = $fechaActual;
     if (isset($_GET['fecha']) && is_string($_GET['fecha'])) {
         $fecha = $_GET['fecha'];
@@ -44,7 +44,7 @@ if ($cita !== null && $cita->esModificable()) {
     $errorDia = $citaControlador->errorDia($fecha);
 
     if ($errorDia === '') {
-        // El segundo dato excluye esta misma cita, para que su horario actual aparezca libre
+        //horario actual aparezca libre
         $horarios = $citaControlador->horarios($fecha, $id);
 
         foreach ($horarios as $horario) {

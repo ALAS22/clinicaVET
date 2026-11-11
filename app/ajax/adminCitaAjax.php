@@ -24,7 +24,7 @@ foreach ($_POST as $valor) {
     }
 }
 
-// Solo el administrador con sesión iniciada puede usar este archivo
+// Solo el administrador con sesion iniciada puede usar este archivo
 if (!SesionControlador::hayUsuario() || SesionControlador::getRol() !== Usuario::ROL_ADMIN) {
     echo json_encode([
         'icono'     => 'error',
@@ -64,12 +64,14 @@ switch ($accion) {
         break;
 
     default:
-        $respuesta = [
+     $respuesta = [
             'icono'     => 'error',
             'titulo'    => 'Petición no válida',
             'texto'     => 'No se pudo procesar la solicitud.',
             'redirigir' => '',
         ];
+
+
 }
 
 echo json_encode($respuesta);

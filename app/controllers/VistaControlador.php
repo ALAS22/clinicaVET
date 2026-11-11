@@ -41,7 +41,7 @@ class VistaControlador
         $hayUsuario = SesionControlador::hayUsuario();
         $rol        = SesionControlador::getRol();
 
-        // Las páginas públicas no tienen sentido si ya iniciaste sesión
+        // Las paginas publicas no tienen sentido si ya iniciaste sesion
         if ($acceso === 'publica' && $hayUsuario) {
             return APP_URL . 'inicio/';
         }

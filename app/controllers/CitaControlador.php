@@ -64,7 +64,7 @@ class CitaControlador extends ControladorBase{
         $hora      = (string) ($datos['hora'] ?? '');
         $motivo    = (string) ($datos['motivo'] ?? '');
 
-        // 1) La mascota debe ser de este cliente
+        // 1)La mascota debe ser de este cliente
         $mascota = $this->mascotas->buscarPorId($mascotaId, $this->usuarioId());
         if ($mascota === null) {
             return $this->respuesta('error', 'Mascota no encontrada', 'Elige una de tus mascotas.');
@@ -77,7 +77,7 @@ class CitaControlador extends ControladorBase{
             return $this->respuesta('error', 'Revisa los datos', implode('<br>', $errores));
         }
 
-        // 3) ¿Ya está ocupado ese horario?
+        // 3) Si el horario esta ocupado:
         if ($this->modelo->estaOcupada($cita->getFechaHora())) {
             return $this->respuesta('error', 'Horario ocupado', 'Ese horario ya fue tomado. Elige otro día u otra hora.');
         }
@@ -124,7 +124,7 @@ class CitaControlador extends ControladorBase{
         $cita->setFechaHora($fecha . ' ' . $hora . ':00');
         $cita->setMotivo($motivo);
 
-        // Una cita aprobada que se cambia vuelve a pendiente: el administrador debe aprobarla otra vez
+        // Una cita aprobada que se cambia vuelve a pendiente y el administrador debe aprobarla otra vez
         $cita->setEstado(Cita::PENDIENTE);
 
         $errores = $cita->validar();
